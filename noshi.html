@@ -22,16 +22,17 @@
   --radius:10px;
 }
 *{box-sizing:border-box;margin:0;padding:0;}
-body{font-family:var(--ff-ui);background:var(--c-bg);min-height:100vh;padding:16px;font-size:16px;}
+body{font-family:var(--ff-ui);background:var(--c-bg);min-height:100vh;font-size:16px;}
+
+/* 通常表示エリア */
+#app{padding:16px;}
 .page-title{font-size:20px;font-weight:700;color:#222;margin-bottom:20px;letter-spacing:0.03em;}
 
-/* レイアウト */
 .layout{display:grid;grid-template-columns:1fr 400px;gap:20px;align-items:start;}
 @media(max-width:900px){.layout{grid-template-columns:1fr;}}
 
 .panel{background:var(--c-panel);border:1px solid var(--c-border);border-radius:14px;padding:20px;}
 
-/* ステップ */
 .step-block{margin-bottom:24px;transition:opacity .2s;}
 .step-block.locked{opacity:.35;pointer-events:none;}
 .step-header{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
@@ -41,45 +42,21 @@ body{font-family:var(--ff-ui);background:var(--c-bg);min-height:100vh;padding:16
 .step-title{font-size:17px;font-weight:700;color:#222;}
 .step-block.locked .step-title{color:#bbb;}
 
-/* グループボタン：画面幅で2〜3列に自動調整 */
-.group-grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(140px,1fr));
-  gap:8px;
-}
-.gbtn{
-  background:#faf9f7;border:1.5px solid var(--c-border);
-  border-radius:var(--radius);padding:14px 8px;
-  font-size:17px;font-weight:600;cursor:pointer;color:#333;
-  text-align:center;line-height:1.4;font-family:var(--ff-ui);
-  -webkit-tap-highlight-color:transparent;transition:all .15s;
-}
+.group-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px;}
+.gbtn{background:#faf9f7;border:1.5px solid var(--c-border);border-radius:var(--radius);padding:14px 8px;font-size:17px;font-weight:600;cursor:pointer;color:#333;text-align:center;line-height:1.4;font-family:var(--ff-ui);-webkit-tap-highlight-color:transparent;transition:all .15s;}
 .gbtn:active{transform:scale(.97);}
 .gbtn.on{background:var(--c-active-bg);border-color:var(--c-active-border);color:var(--c-active-text);}
 .gbtn .emoji{display:block;font-size:22px;margin-bottom:4px;}
 
-/* 表書きボタン：画面幅で2〜3列に自動調整 */
-.item-grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(140px,1fr));
-  gap:8px;
-}
-.ibtn{
-  background:#faf9f7;border:1.5px solid var(--c-border);
-  border-radius:var(--radius);padding:12px 8px;
-  font-size:18px;font-weight:600;cursor:pointer;color:#333;
-  text-align:center;line-height:1.5;font-family:var(--ff-ui);
-  -webkit-tap-highlight-color:transparent;transition:all .15s;
-  display:flex;flex-direction:column;align-items:center;gap:4px;
-}
+.item-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px;}
+.ibtn{background:#faf9f7;border:1.5px solid var(--c-border);border-radius:var(--radius);padding:12px 8px;font-size:18px;font-weight:600;cursor:pointer;color:#333;text-align:center;line-height:1.5;font-family:var(--ff-ui);-webkit-tap-highlight-color:transparent;transition:all .15s;display:flex;flex-direction:column;align-items:center;gap:4px;}
 .ibtn:active{transform:scale(.97);}
 .ibtn.on{background:var(--c-active-bg);border-color:var(--c-active-border);color:var(--c-active-text);}
-/* 添え文字＋表書きを横並び・同サイズ・黒 */
 .ibtn .label-row{font-size:18px;font-weight:600;color:#333;white-space:nowrap;}
 .ibtn.on .label-row{color:var(--c-active-text);}
-/* 説明文：ボタン内下部に小さく */
-.ibtn .idesc{font-size:12px;color:#999;font-weight:400;line-height:1.4;text-align:center;}
-.ibtn.on .idesc{color:#7baaf7;}
+/* 説明文：13px→14px、色を濃く #666 */
+.ibtn .idesc{font-size:14px;color:#666;font-weight:400;line-height:1.4;text-align:center;}
+.ibtn.on .idesc{color:#5a82cc;}
 
 textarea{width:100%;border:1.5px solid var(--c-border);border-radius:var(--radius);padding:12px;font-family:var(--ff-ui);font-size:18px;resize:vertical;min-height:80px;color:#333;background:white;line-height:1.6;}
 textarea:focus{outline:none;border-color:var(--c-active-border);}
@@ -108,26 +85,31 @@ textarea:focus{outline:none;border-color:var(--c-active-border);}
 .loading{text-align:center;padding:28px;font-size:16px;color:#aaa;}
 .error-msg{font-size:14px;color:#c0392b;padding:10px;background:#fdf0ef;border-radius:8px;margin-top:8px;line-height:1.7;}
 
+/* ===== 印刷専用ページ ===== */
+/* 印刷時は #app を隠して #print-page だけ見せる */
+#print-page{display:none;}
+
+@media print{
+  @page{size:var(--print-size,A3) landscape;margin:0;}
+  #app{display:none !important;}
+  #print-page{display:block !important;position:fixed;inset:0;background:white;}
+  #print-page svg{width:100vw;height:100vh;display:block;}
+}
+
 @media(max-width:600px){
   .group-grid{grid-template-columns:repeat(auto-fill,minmax(120px,1fr));}
   .item-grid{grid-template-columns:repeat(auto-fill,minmax(120px,1fr));}
 }
-@media print{
-  @page{size:var(--print-size) landscape;margin:0;}
-  html,body{margin:0;padding:0;background:white;}
-  body *{visibility:hidden;}
-  #pt{visibility:visible;position:fixed;inset:0;background:white;}
-  #pt *{visibility:visible;}
-  #pt svg{width:100vw;height:100vh;}
-}
 </style>
 </head>
 <body>
+
+<!-- 通常表示 -->
+<div id="app">
 <div class="page-title">🎁 熨斗メーカー</div>
 <div class="layout">
 
 <div class="panel">
-  <!-- STEP1 -->
   <div class="step-block active" id="step1-block">
     <div class="step-header">
       <div class="step-badge" id="badge1">1</div>
@@ -140,7 +122,6 @@ textarea:focus{outline:none;border-color:var(--c-active-border);}
   </div>
   <hr class="divider">
 
-  <!-- STEP2 -->
   <div class="step-block locked" id="step2-block">
     <div class="step-header">
       <div class="step-badge" id="badge2">2</div>
@@ -150,7 +131,6 @@ textarea:focus{outline:none;border-color:var(--c-active-border);}
   </div>
   <hr class="divider">
 
-  <!-- STEP3 -->
   <div class="step-block" id="step3-block">
     <div class="step-header">
       <div class="step-badge" id="badge3">3</div>
@@ -161,7 +141,6 @@ textarea:focus{outline:none;border-color:var(--c-active-border);}
   </div>
   <hr class="divider">
 
-  <!-- STEP4 -->
   <div class="step-block" id="step4-block">
     <div class="step-header">
       <div class="step-badge" id="badge4">4</div>
@@ -181,7 +160,6 @@ textarea:focus{outline:none;border-color:var(--c-active-border);}
   </div>
 </div>
 
-<!-- プレビュー -->
 <div class="preview-wrap">
   <div class="prev-meta">
     <span id="prev-size-lbl">プレビュー（A3横）</span>
@@ -194,14 +172,15 @@ textarea:focus{outline:none;border-color:var(--c-active-border);}
   </div>
 </div>
 
-</div>
-<div id="pt" style="display:none;"></div>
+</div><!-- /layout -->
+</div><!-- /app -->
+
+<!-- 印刷専用エリア（@media print でのみ表示） -->
+<div id="print-page"></div>
 
 <script>
 const CSV_URL='https://docs.google.com/spreadsheets/d/e/2PACX-1vSqFm7X3Dk4yZJqSx_SzoGOlCdFzQmOgVorngEKD5pD-cHax7BLGfm_GPmNU8aYslep_FS-jz8F4KJD/pub?gid=0&single=true&output=csv';
-
 const GROUP_EMOJI={'結婚':'💍','出産・入学・卒業':'🌸','長寿・結婚記念':'🎊','快気祝い':'🌿','お見舞い':'💐','弔辞':'🕯️'};
-
 const SIZES={
   A3:{w:420,h:297,label:'A3横',printSize:'A3'},
   A4:{w:297,h:210,label:'A4横',printSize:'A4'},
@@ -262,28 +241,22 @@ function pickGroup(btn){
   document.querySelectorAll('.gbtn').forEach(b=>b.classList.remove('on'));
   btn.classList.add('on');
   curGroup=btn.dataset.g;curItem=null;
-
   document.getElementById('step1-block').classList.replace('active','done');
   document.getElementById('badge1').textContent='✓';
   const s2=document.getElementById('step2-block');
   s2.classList.remove('locked');s2.classList.add('active');
   document.getElementById('badge2').textContent='2';
-
   const grid=document.getElementById('item-grid');
   grid.innerHTML='';
-
   DATA.filter(d=>d.group===curGroup).forEach(d=>{
     const b=document.createElement('button');
     b.className='ibtn';b.dataset.idx=DATA.indexOf(d);
-
-    // 添え文字と表書きを横並び（全角スペース区切り）・同サイズ・黒
     const labelText=d.soe?`${d.soe}　${d.omote}`:d.omote;
     const descHTML=d.desc?`<span class="idesc">${d.desc}</span>`:'';
     b.innerHTML=`<span class="label-row">${labelText}</span>${descHTML}`;
     b.onclick=function(){pickItem(this);};
     grid.appendChild(b);
   });
-
   document.getElementById('print-btn').disabled=true;
   document.getElementById('prev-noshi-name').textContent='';
   render();
@@ -325,14 +298,12 @@ function makeSVG(w,h){
   const ink=(curItem&&curItem.usumeki)?'#888888':'#111111';
   const nameRaw=document.getElementById('name').value.trim();
   const names=nameRaw?nameRaw.split('\n').map(s=>s.trim()).filter(Boolean).slice(0,3):[];
-
   let els=`<rect width="${w}" height="${h}" fill="white"/>`;
   if(curItem&&curItem.img){
     els+=`<image href="${curItem.img}.jpg" x="0" y="0" width="${w}" height="${h}" preserveAspectRatio="xMidYMid slice"/>`;
   }
   if(!curItem)return`<svg viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg">${els}</svg>`;
 
-  // 表書き
   const oChars=curItem.omote.split('');
   const{fs:oFs,step:oStep,totalH:oTotalH}=calcVert(oChars.length,O_BASE,O_H);
   const oStartY=(O_TOP+O_BOTTOM)/2-oTotalH/2;
@@ -341,8 +312,6 @@ function makeSVG(w,h){
     const ymm=oStartY+oFs*0.85+i*oFs*oStep;
     els+=`<text x="${omoteX*scaleX}" y="${ymm*scaleY}" text-anchor="middle" font-size="${oFs*scaleY}" font-weight="700" font-family="${FF}" fill="${ink}">${c}</text>`;
   });
-
-  // 添え文字（表書き右7mm・上揃え）
   if(curItem.soe){
     const soeChars=curItem.soe.split('');
     const{fs:sFs,step:sSp}=calcSoeVert(soeChars.length,SOE_BASE,BASE_H-SOE_TOP-20);
@@ -352,8 +321,6 @@ function makeSVG(w,h){
       els+=`<text x="${soeX*scaleX}" y="${ymm*scaleY}" text-anchor="middle" font-size="${sFs*scaleY}" font-weight="700" font-family="${FF}" fill="${ink}">${c}</text>`;
     });
   }
-
-  // 名前
   if(names.length>0){
     const maxLen=Math.max(...names.map(n=>n.length));
     const{fs:nFs,step:nStep,totalH:nTotalH}=calcVert(maxLen,N_BASE,N_H);
@@ -375,14 +342,17 @@ function render(){
   const s=SIZES[curSize];
   document.getElementById('prev').innerHTML=makeSVG(s.w,s.h);
 }
+
 function doPrint(){
+  if(!curItem)return;
   const s=SIZES[curSize];
   const pw=Math.round(s.w/25.4*300),ph=Math.round(s.h/25.4*300);
+  // 印刷サイズをCSS変数に設定
   document.documentElement.style.setProperty('--print-size',s.printSize);
-  const pt=document.getElementById('pt');
-  pt.style.display='block';
-  pt.innerHTML=makeSVG(pw,ph);
-  setTimeout(()=>{window.print();setTimeout(()=>{pt.style.display='none';},2000);},200);
+  // 印刷専用エリアにSVGを入れる（setTimeoutなし・直接呼び出し）
+  document.getElementById('print-page').innerHTML=makeSVG(pw,ph);
+  // window.printをボタンのクリックイベント内で直接呼ぶ（Safariブロック回避）
+  window.print();
 }
 
 document.fonts.ready.then(()=>{loadData();});
