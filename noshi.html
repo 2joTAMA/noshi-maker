@@ -12,30 +12,35 @@
 body{font-family:-apple-system,'Hiragino Sans',sans-serif;background:#f5f5f3;min-height:100vh;padding:16px;}
 h1{font-size:16px;font-weight:500;color:#333;margin-bottom:16px;letter-spacing:0.05em;}
 .layout{display:flex;gap:16px;align-items:flex-start;flex-wrap:wrap;}
-.panel{background:white;border:1px solid #ddd;border-radius:12px;padding:16px;width:240px;flex-shrink:0;}
+.panel{background:white;border:1px solid #ddd;border-radius:12px;padding:16px;width:260px;flex-shrink:0;}
 .preview-wrap{flex:1;min-width:280px;}
-.sec{margin-bottom:14px;}
-.lbl{font-size:11px;color:#888;display:block;margin-bottom:6px;letter-spacing:0.04em;}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
-.opt{background:#f5f5f3;border:1px solid #ddd;border-radius:8px;padding:9px 4px;font-size:13px;cursor:pointer;color:#333;text-align:center;line-height:1.4;font-family:'Hiragino Mincho ProN','Noto Serif JP',serif;-webkit-tap-highlight-color:transparent;}
-.opt.on{background:#e8f0fe;border-color:#7baaf7;color:#1a56cc;}
+.sec{margin-bottom:16px;}
+.lbl{font-size:11px;color:#888;display:block;margin-bottom:7px;letter-spacing:0.04em;}
+.group-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
+.gbtn{background:#f5f5f3;border:1px solid #ddd;border-radius:8px;padding:9px 6px;font-size:12px;cursor:pointer;color:#333;text-align:center;line-height:1.4;-webkit-tap-highlight-color:transparent;transition:all .12s;}
+.gbtn.on{background:#e8f0fe;border-color:#7baaf7;color:#1a56cc;font-weight:500;}
+.item-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px;}
+.ibtn{background:#f5f5f3;border:1px solid #ddd;border-radius:8px;padding:10px 6px;font-size:13px;cursor:pointer;color:#333;text-align:center;line-height:1.5;font-family:'Hiragino Mincho ProN','Noto Serif JP',serif;-webkit-tap-highlight-color:transparent;transition:all .12s;}
+.ibtn.on{background:#e8f0fe;border-color:#7baaf7;color:#1a56cc;}
+.ibtn .soe{font-size:11px;color:#888;display:block;margin-bottom:2px;}
+.ibtn.on .soe{color:#5a82cc;}
+.desc-box{margin-top:8px;min-height:18px;font-size:11px;color:#888;line-height:1.6;padding:5px 8px;background:#f9f9f7;border-radius:6px;}
 textarea{width:100%;border:1px solid #ddd;border-radius:8px;padding:8px;font-family:'Hiragino Mincho ProN','Noto Serif JP',serif;font-size:14px;resize:vertical;min-height:72px;color:#333;background:white;}
 .hint{font-size:11px;color:#aaa;margin-top:4px;line-height:1.55;}
-.cb-row{display:flex;align-items:center;gap:8px;cursor:pointer;-webkit-tap-highlight-color:transparent;}
-.cb-row input{width:18px;height:18px;}
-.cb-row span{font-size:13px;color:#333;}
+.size-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;}
+.sbtn{background:#f5f5f3;border:1px solid #ddd;border-radius:8px;padding:8px 4px;font-size:12px;cursor:pointer;color:#333;text-align:center;-webkit-tap-highlight-color:transparent;transition:all .12s;}
+.sbtn.on{background:#e8f0fe;border-color:#7baaf7;color:#1a56cc;font-weight:500;}
 .pbtn{width:100%;padding:12px;background:white;border:1px solid #bbb;border-radius:8px;font-size:14px;font-weight:500;cursor:pointer;color:#333;margin-top:4px;-webkit-tap-highlight-color:transparent;}
 .pbtn:active{background:#f0f0f0;}
-.prev-lbl{font-size:11px;color:#aaa;margin-bottom:6px;}
-.prev-box{background:#e0e0dc;border-radius:8px;width:100%;aspect-ratio:420/297;display:flex;align-items:center;justify-content:center;padding:8px;}
-.prev-inner{background:white;width:100%;height:100%;border:1px solid #bbb;border-radius:2px;overflow:hidden;}
+.pbtn:disabled{opacity:.4;cursor:not-allowed;}
+.prev-lbl{font-size:11px;color:#aaa;margin-bottom:4px;display:flex;justify-content:space-between;align-items:baseline;}
+.prev-lbl .noshi-name{font-size:11px;color:#999;}
+.prev-box{background:#e0e0dc;border-radius:8px;width:100%;overflow:hidden;display:flex;align-items:center;justify-content:center;padding:8px;}
+.prev-inner{background:white;width:100%;border:1px solid #bbb;border-radius:2px;overflow:hidden;position:relative;}
 .prev-inner svg{width:100%;height:100%;display:block;}
-@media(max-width:560px){
-  .panel{width:100%;}
-  .preview-wrap{width:100%;}
-}
+@media(max-width:600px){.panel{width:100%;}.preview-wrap{width:100%;}}
 @media print{
-  @page{size:A3 landscape;margin:0;}
+  @page{size:var(--print-size) landscape;margin:0;}
   html,body{margin:0;padding:0;background:white;}
   body *{visibility:hidden;}
   #pt{visibility:visible;position:fixed;inset:0;background:white;}
@@ -49,39 +54,50 @@ textarea{width:100%;border:1px solid #ddd;border-radius:8px;padding:8px;font-fam
 <div class="layout">
 
 <div class="panel">
+  <!-- STEP1 グループ -->
   <div class="sec">
-    <span class="lbl">表書き</span>
-    <div class="grid2">
-      <button class="opt on" data-v="御祝" onclick="pickOmote(this)">御祝</button>
-      <button class="opt" data-v="粗品" onclick="pickOmote(this)">粗品</button>
-      <button class="opt" data-v="寿" onclick="pickOmote(this)">寿</button>
-      <button class="opt" data-v="御礼" onclick="pickOmote(this)">御礼</button>
-      <button class="opt" data-v="祝金婚式" onclick="pickOmote(this)">祝金婚式</button>
-      <button class="opt" data-v="祝御結婚" onclick="pickOmote(this)">祝御結婚</button>
-    </div>
+    <span class="lbl">STEP 1｜どんな場面ですか？</span>
+    <div class="group-grid" id="group-grid"></div>
   </div>
 
+  <!-- STEP2 表書き -->
+  <div class="sec" id="step2" style="display:none;">
+    <span class="lbl">STEP 2｜表書きを選んでください</span>
+    <div class="item-grid" id="item-grid"></div>
+    <div class="desc-box" id="desc-box"></div>
+  </div>
+
+  <!-- 名前（常時表示） -->
   <div class="sec">
     <span class="lbl">贈り主の名前</span>
     <textarea id="name" placeholder="1名：山田太郎&#10;連名：1行目に1人目（右）&#10;　　　2行目に2人目（左）" oninput="render()" rows="3"></textarea>
     <p class="hint">連名は1行1名・先に書いた方が右になります（最大3名）</p>
   </div>
 
+  <!-- 用紙サイズ -->
   <div class="sec">
-    <label class="cb-row">
-      <input type="checkbox" id="usumeki" onchange="render()">
-      <span>薄墨で印刷する</span>
-    </label>
+    <span class="lbl">用紙サイズ</span>
+    <div class="size-grid">
+      <button class="sbtn on" data-s="A3" onclick="pickSize(this)">A3</button>
+      <button class="sbtn" data-s="A4" onclick="pickSize(this)">A4</button>
+      <button class="sbtn" data-s="B5" onclick="pickSize(this)">B5</button>
+    </div>
   </div>
 
-  <button class="pbtn" onclick="doPrint()">🖨 A3横で印刷する</button>
-  <p class="hint" style="margin-top:6px;">印刷ダイアログ → 用紙A3・横向き・余白なし</p>
+  <button class="pbtn" id="print-btn" onclick="doPrint()" disabled>🖨 印刷する</button>
+  <p class="hint" style="margin-top:6px;">印刷ダイアログ → 横向き・余白なし</p>
 </div>
 
+<!-- プレビュー -->
 <div class="preview-wrap">
-  <p class="prev-lbl">プレビュー（A3横 420×297mm）</p>
-  <div class="prev-box">
-    <div class="prev-inner" id="prev"></div>
+  <div class="prev-lbl">
+    <span id="prev-size-lbl">プレビュー（A3横 420×297mm）</span>
+    <span class="noshi-name" id="prev-noshi-name"></span>
+  </div>
+  <div class="prev-box" id="prev-box">
+    <div class="prev-inner" id="prev-inner">
+      <div id="prev"></div>
+    </div>
   </div>
 </div>
 
@@ -89,109 +105,244 @@ textarea{width:100%;border:1px solid #ddd;border-radius:8px;padding:8px;font-fam
 <div id="pt" style="display:none;"></div>
 
 <script>
-// フォント優先順
-// iPad/Mac : ヒラギノ明朝 ProN W6 → W3
-// Windows  : Noto Serif JP 700（Googleフォント）→ Yu Mincho
-const FF = "'Hiragino Mincho ProN W6','HiraMinProN-W6','Hiragino Mincho ProN','HiraMinProN-W3','Noto Serif JP','Yu Mincho','YuMincho',serif";
+// ============================================================
+// データ
+// ============================================================
+const DATA = [
+  {group:'結婚',          soe:null,      omote:'内祝',    noshi:'紅白10本結び切り／熨斗あり', img:'kohaku_10_musubikiri', desc:'結婚祝いのお返し',     usumeki:false},
+  {group:'結婚',          soe:null,      omote:'寿',      noshi:'紅白10本結び切り／熨斗あり', img:'kohaku_10_musubikiri', desc:'結婚祝いのお返し',     usumeki:false},
+  {group:'結婚',          soe:'御結婚',  omote:'御祝',    noshi:'紅白10本結び切り／熨斗あり', img:'kohaku_10_musubikiri', desc:null,                   usumeki:false},
+  {group:'出産・入学・卒業', soe:null,   omote:'内祝',    noshi:'紅白蝶結び／熨斗あり',       img:'kohaku_5_cho',         desc:'一般的なお祝いのお返し', usumeki:false},
+  {group:'出産・入学・卒業', soe:'御出産', omote:'御祝',  noshi:'紅白蝶結び／熨斗あり',       img:'kohaku_5_cho',         desc:null,                   usumeki:false},
+  {group:'出産・入学・卒業', soe:'入学之', omote:'御祝',  noshi:'紅白蝶結び／熨斗あり',       img:'kohaku_5_cho',         desc:null,                   usumeki:false},
+  {group:'出産・入学・卒業', soe:'卒業之', omote:'御祝',  noshi:'紅白蝶結び／熨斗あり',       img:'kohaku_5_cho',         desc:null,                   usumeki:false},
+  {group:'長寿・結婚記念', soe:'還暦',   omote:'御祝',    noshi:'紅白蝶結び／熨斗あり',       img:'kohaku_5_cho',         desc:'60歳のお祝い',          usumeki:false},
+  {group:'長寿・結婚記念', soe:'古希',   omote:'御祝',    noshi:'紅白蝶結び／熨斗あり',       img:'kohaku_5_cho',         desc:'70歳のお祝い',          usumeki:false},
+  {group:'長寿・結婚記念', soe:'喜寿',   omote:'御祝',    noshi:'紅白蝶結び／熨斗あり',       img:'kohaku_5_cho',         desc:'77歳のお祝い',          usumeki:false},
+  {group:'長寿・結婚記念', soe:'傘寿',   omote:'御祝',    noshi:'紅白蝶結び／熨斗あり',       img:'kohaku_5_cho',         desc:'80歳のお祝い',          usumeki:false},
+  {group:'長寿・結婚記念', soe:'米寿',   omote:'御祝',    noshi:'紅白蝶結び／熨斗あり',       img:'kohaku_5_cho',         desc:'88歳のお祝い',          usumeki:false},
+  {group:'長寿・結婚記念', soe:'卒寿',   omote:'御祝',    noshi:'紅白蝶結び／熨斗あり',       img:'kohaku_5_cho',         desc:'90歳のお祝い',          usumeki:false},
+  {group:'長寿・結婚記念', soe:'白寿',   omote:'御祝',    noshi:'紅白蝶結び／熨斗あり',       img:'kohaku_5_cho',         desc:'99歳のお祝い',          usumeki:false},
+  {group:'長寿・結婚記念', soe:'銀婚式', omote:'御祝',    noshi:'紅白蝶結び／熨斗あり',       img:'kohaku_5_cho',         desc:'結婚25年のお祝い',      usumeki:false},
+  {group:'長寿・結婚記念', soe:'金婚式', omote:'御祝',    noshi:'紅白蝶結び／熨斗あり',       img:'kohaku_5_cho',         desc:'結婚50年のお祝い',      usumeki:false},
+  {group:'快気祝い',      soe:null,      omote:'快気内祝', noshi:'紅白結び切り／熨斗あり',    img:'kohaku_7_musubikiri',  desc:'快気祝いのお返し',      usumeki:false},
+  {group:'快気祝い',      soe:null,      omote:'快気祝',   noshi:'紅白結び切り／熨斗あり',    img:'kohaku_7_musubikiri',  desc:null,                   usumeki:false},
+  {group:'お見舞い',      soe:null,      omote:'御見舞',   noshi:'紅白結び切り／熨斗なし',    img:'kohaku_5_musubikiri_nashi', desc:null,               usumeki:false},
+  {group:'弔辞',          soe:null,      omote:'志',       noshi:'黄白結び切り',              img:'kishiro_5_musubikiri', desc:'香典のお返し',          usumeki:true},
+  {group:'弔辞',          soe:null,      omote:'満中陰志', noshi:'黄白結び切り',              img:'kishiro_5_musubikiri', desc:'香典のお返し',          usumeki:true},
+];
 
-// mm寸法定数（A3横 420×297mm）
-const W=420, H=297, CX=W/2, CY=H/2;
-const O_TOP=20,    O_BOTTOM=CY-30, O_H=O_BOTTOM-O_TOP; // 20〜118.5mm = 98.5mm
-const N_TOP=CY+30, N_BOTTOM=H-20,  N_H=N_BOTTOM-N_TOP; // 178.5〜277mm = 98.5mm
-const O_BASE=22, N_BASE=14;                              // 88Q=22mm, 56Q=14mm
+// ============================================================
+// 用紙サイズ定義（mm・横向き）
+// A3基準の文字サイズをそのまま使い、座標をスケール
+// ============================================================
+const SIZES = {
+  A3: {w:420, h:297, label:'A3横 420×297mm', printSize:'A3'},
+  A4: {w:297, h:210, label:'A4横 297×210mm', printSize:'A4'},
+  B5: {w:257, h:182, label:'B5横 257×182mm', printSize:'B5'},
+};
+// A3を基準スケール(1.0)として各サイズの比率を計算
+const BASE_W = 420, BASE_H = 297;
 
-// 字間（文字サイズに対する追加スペース比率）
-// 文字数が少ないほど広く開ける
+// ============================================================
+// 寸法定数（A3基準 mm）
+// ============================================================
+const O_TOP=20, O_BOTTOM=BASE_H/2-30, O_H=O_BOTTOM-O_TOP; // 表書きエリア
+const N_TOP=BASE_H/2+30, N_BOTTOM=BASE_H-20, N_H=N_BOTTOM-N_TOP; // 名前エリア
+const O_BASE=22, N_BASE=14; // フォントサイズ基本値(mm)
+const SOE_TOP=23, SOE_BASE=11, SOE_GAP=0.10, SOE_OMOTE_GAP=7;
+
+const FF="'Hiragino Mincho ProN W6','HiraMinProN-W6','Hiragino Mincho ProN','HiraMinProN-W3','Noto Serif JP','Yu Mincho','YuMincho',serif";
+
+// ============================================================
+// 字間・縦配置計算
+// ============================================================
 function getGap(n){
-  if(n<=1) return 0;
-  if(n===2) return 0.35;
-  if(n===3) return 0.20;
-  return 0.10;
+  if(n<=1)return 0; if(n===2)return 0.35; if(n===3)return 0.20; return 0.10;
 }
-
-// 縦方向配置計算
 function calcVert(n, baseFs, availH){
-  const gap  = getGap(n);
-  const step = 1 + gap;
-  let fs = baseFs;
-  let totalH = fs * (1 + (n-1)*step);
-  if(totalH > availH){
-    fs = availH / (1 + (n-1)*step);
-    totalH = availH;
-  }
-  return {fs, step, totalH};
+  const step=1+getGap(n);
+  let fs=baseFs;
+  let totalH=fs*(1+(n-1)*step);
+  if(totalH>availH){fs=availH/(1+(n-1)*step);totalH=availH;}
+  return{fs,step,totalH};
+}
+function calcSoeVert(n, baseFs, availH){
+  const step=1+SOE_GAP;
+  let fs=baseFs;
+  let totalH=fs*(1+(n-1)*step);
+  if(totalH>availH){fs=availH/(1+(n-1)*step);totalH=availH;}
+  return{fs,step,totalH};
 }
 
-let curOmote = '御祝';
+// ============================================================
+// 状態
+// ============================================================
+let curGroup=null, curItem=null, curSize='A3';
 
-function pickOmote(btn){
-  document.querySelectorAll('[onclick="pickOmote(this)"]').forEach(b=>b.classList.remove('on'));
+// ============================================================
+// グループボタンを動的生成
+// ============================================================
+function buildGroups(){
+  const groups=[...new Set(DATA.map(d=>d.group))];
+  const grid=document.getElementById('group-grid');
+  groups.forEach(g=>{
+    const b=document.createElement('button');
+    b.className='gbtn'; b.dataset.g=g; b.textContent=g;
+    b.onclick=function(){pickGroup(this);};
+    grid.appendChild(b);
+  });
+}
+
+function pickGroup(btn){
+  document.querySelectorAll('.gbtn').forEach(b=>b.classList.remove('on'));
   btn.classList.add('on');
-  curOmote = btn.dataset.v;
+  curGroup=btn.dataset.g; curItem=null;
+
+  const grid=document.getElementById('item-grid');
+  grid.innerHTML='';
+  document.getElementById('desc-box').textContent='';
+
+  DATA.filter(d=>d.group===curGroup).forEach(d=>{
+    const b=document.createElement('button');
+    b.className='ibtn'; b.dataset.idx=DATA.indexOf(d);
+    b.innerHTML=d.soe?`<span class="soe">${d.soe}</span>${d.omote}`:d.omote;
+    b.onclick=function(){pickItem(this);};
+    grid.appendChild(b);
+  });
+
+  document.getElementById('step2').style.display='';
+  document.getElementById('print-btn').disabled=true;
+  document.getElementById('prev-noshi-name').textContent='';
   render();
 }
 
-function makeSVG(w, h){
-  const sx = w/W, sy = h/H;
-  const usumeki = document.getElementById('usumeki').checked;
-  const ink = usumeki ? '#888888' : '#111111';
-  const nameRaw = document.getElementById('name').value.trim();
-  const names = nameRaw ? nameRaw.split('\n').map(s=>s.trim()).filter(Boolean).slice(0,3) : [];
+function pickItem(btn){
+  document.querySelectorAll('.ibtn').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  curItem=DATA[parseInt(btn.dataset.idx)];
+  document.getElementById('desc-box').textContent=curItem.desc||'';
+  document.getElementById('print-btn').disabled=false;
+  document.getElementById('prev-noshi-name').textContent=curItem.noshi;
+  render();
+}
 
-  let els = `<rect width="${w}" height="${h}" fill="white"/>`;
+function pickSize(btn){
+  document.querySelectorAll('.sbtn').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  curSize=btn.dataset.s;
+  updatePreviewAspect();
+  document.getElementById('prev-size-lbl').textContent='プレビュー（'+SIZES[curSize].label+'）';
+  render();
+}
 
-  // ---- 表書き ----
-  const oChars = curOmote.split('');
-  const {fs:oFs, step:oStep, totalH:oTotalH} = calcVert(oChars.length, O_BASE, O_H);
-  const oMidY   = (O_TOP + O_BOTTOM) / 2;
-  const oStartY = oMidY - oTotalH/2;
+function updatePreviewAspect(){
+  const s=SIZES[curSize];
+  const inner=document.getElementById('prev-inner');
+  inner.style.aspectRatio=s.w+'/'+s.h;
+}
 
-  oChars.forEach((c, i)=>{
-    const ymm = oStartY + oFs*0.85 + i*oFs*oStep;
-    els += `<text x="${w/2}" y="${ymm*sy}" text-anchor="middle" `
-         + `font-size="${oFs*sy}" font-weight="700" `
-         + `font-family="${FF}" fill="${ink}">${c}</text>`;
+// ============================================================
+// SVG生成（プレビュー・印刷共通）
+// ============================================================
+function makeSVG(w, h, forPrint){
+  // A3基準からのスケール比率
+  const scaleX=w/BASE_W, scaleY=h/BASE_H;
+  const CX=w/2, CY=h/2;
+
+  const ink=curItem&&curItem.usumeki?'#888888':'#111111';
+  const nameRaw=document.getElementById('name').value.trim();
+  const names=nameRaw?nameRaw.split('\n').map(s=>s.trim()).filter(Boolean).slice(0,3):[];
+
+  let els='<rect width="'+w+'" height="'+h+'" fill="white"/>';
+
+  // ---- 背景画像 ----
+  if(curItem){
+    const imgFile=curItem.img+'.jpg';
+    els+=`<image href="${imgFile}" x="0" y="0" width="${w}" height="${h}" preserveAspectRatio="xMidYMid slice"/>`;
+  }
+
+  if(!curItem){
+    return`<svg viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg">${els}</svg>`;
+  }
+
+  // ---- 表書き（水平センター固定）----
+  const oChars=curItem.omote.split('');
+  const oAvailH=O_H; // A3基準mm
+  const{fs:oFs,step:oStep,totalH:oTotalH}=calcVert(oChars.length,O_BASE,oAvailH);
+  const oMidY=(O_TOP+O_BOTTOM)/2;
+  const oStartY=oMidY-oTotalH/2;
+  const omoteX=BASE_W/2; // 常にA3基準水平センター(mm)
+
+  oChars.forEach((c,i)=>{
+    const ymm=oStartY+oFs*0.85+i*oFs*oStep;
+    els+=`<text x="${omoteX*scaleX}" y="${ymm*scaleY}" text-anchor="middle" `
+       +`font-size="${oFs*scaleY}" font-weight="700" font-family="${FF}" fill="${ink}">${c}</text>`;
   });
 
-  // ---- 名前 ----
-  if(names.length > 0){
-    const maxLen = Math.max(...names.map(n=>n.length));
-    const {fs:nFs, step:nStep, totalH:nTotalH} = calcVert(maxLen, N_BASE, N_H);
-    const nMidY   = (N_TOP + N_BOTTOM) / 2;
-    const nStartY = nMidY - nTotalH/2;
+  // ---- 添え文字（表書きの右7mm・上端23mmから上揃え）----
+  if(curItem.soe){
+    const soeChars=curItem.soe.split('');
+    const soeAvailH=BASE_H-SOE_TOP-20;
+    const{fs:sFs,step:sSp}=calcSoeVert(soeChars.length,SOE_BASE,soeAvailH);
+    // 添え文字X = 表書きの右端 + 7mm + 添え文字幅/2
+    // 表書き右端 = omoteX + oFs/2
+    const soeX=omoteX+oFs/2+SOE_OMOTE_GAP+sFs/2;
+    soeChars.forEach((c,i)=>{
+      const ymm=SOE_TOP+sFs*0.85+i*sFs*sSp;
+      els+=`<text x="${soeX*scaleX}" y="${ymm*scaleY}" text-anchor="middle" `
+         +`font-size="${sFs*scaleY}" font-weight="700" font-family="${FF}" fill="${ink}">${c}</text>`;
+    });
+  }
 
-    const colGap     = nFs * 1.6;
-    const totalColW  = (names.length - 1) * colGap;
-    const rightmostX = CX + totalColW/2;
-
-    names.forEach((name, ci)=>{
-      const colXmm = rightmostX - ci * colGap;
-      name.split('').forEach((nc, ni)=>{
-        const ymm = nStartY + nFs*0.85 + ni*nFs*nStep;
-        els += `<text x="${colXmm*sx}" y="${ymm*sy}" text-anchor="middle" `
-             + `font-size="${nFs*sy}" font-weight="700" `
-             + `font-family="${FF}" fill="${ink}">${nc}</text>`;
+  // ---- 名前（水平センター・連名は右から左）----
+  if(names.length>0){
+    const maxLen=Math.max(...names.map(n=>n.length));
+    const{fs:nFs,step:nStep,totalH:nTotalH}=calcVert(maxLen,N_BASE,N_H);
+    const nMidY=(N_TOP+N_BOTTOM)/2;
+    const nStartY=nMidY-nTotalH/2;
+    const colGap=nFs*1.6;
+    const totalColW=(names.length-1)*colGap;
+    const rightmostX=BASE_W/2+totalColW/2;
+    names.forEach((name,ci)=>{
+      const colXmm=rightmostX-ci*colGap;
+      name.split('').forEach((nc,ni)=>{
+        const ymm=nStartY+nFs*0.85+ni*nFs*nStep;
+        els+=`<text x="${colXmm*scaleX}" y="${ymm*scaleY}" text-anchor="middle" `
+           +`font-size="${nFs*scaleY}" font-weight="700" font-family="${FF}" fill="${ink}">${nc}</text>`;
       });
     });
   }
 
-  return `<svg viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg">${els}</svg>`;
+  return`<svg viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg">${els}</svg>`;
 }
 
+// ============================================================
+// 描画・印刷
+// ============================================================
 function render(){
-  document.getElementById('prev').innerHTML = makeSVG(420, 297);
+  const s=SIZES[curSize];
+  document.getElementById('prev').innerHTML=makeSVG(s.w,s.h,false);
 }
 
 function doPrint(){
-  const pt = document.getElementById('pt');
-  pt.style.display = 'block';
-  pt.innerHTML = makeSVG(1587, 1123);
-  setTimeout(()=>{
-    window.print();
-    setTimeout(()=>{ pt.style.display = 'none'; }, 2000);
-  }, 200);
+  const s=SIZES[curSize];
+  // 印刷用：300ppi相当のpx（A3=4962x3508, A4=3508x2480, B5=3035x2149）
+  const PPI=300, MM_PER_INCH=25.4;
+  const pw=Math.round(s.w/MM_PER_INCH*PPI);
+  const ph=Math.round(s.h/MM_PER_INCH*PPI);
+  document.documentElement.style.setProperty('--print-size',s.printSize);
+  const pt=document.getElementById('pt');
+  pt.style.display='block';
+  pt.innerHTML=makeSVG(pw,ph,true);
+  setTimeout(()=>{window.print();setTimeout(()=>{pt.style.display='none';},2000);},200);
 }
 
+// ============================================================
+// 初期化
+// ============================================================
+buildGroups();
+updatePreviewAspect();
 document.fonts.ready.then(()=>render());
 </script>
 </body>
