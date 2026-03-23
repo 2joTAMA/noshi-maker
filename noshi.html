@@ -10,7 +10,6 @@
 <style>
 :root{
   --ff-ui:-apple-system,'Hiragino Sans','Yu Gothic UI','Meiryo',sans-serif;
-  --ff-noshi:'Hiragino Mincho ProN W6','HiraMinProN-W6','Hiragino Mincho ProN','Noto Serif JP','Yu Mincho',serif;
   --c-bg:#f5f4f0;--c-panel:#ffffff;--c-border:#e0ddd8;
   --c-active-bg:#e8f0fe;--c-active-border:#7baaf7;--c-active-text:#1a56cc;
   --c-muted:#999;--c-step-done:#2e7d32;--radius:10px;
@@ -51,14 +50,26 @@ textarea:focus{outline:none;border-color:var(--c-active-border);}
 .sbtn:active{transform:scale(.97);}
 .sbtn.on{background:var(--c-active-bg);border-color:var(--c-active-border);color:var(--c-active-text);}
 .print-area{margin-top:4px;}
-.btn-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
-.pbtn{width:100%;padding:16px;background:#1a56cc;border:none;border-radius:var(--radius);font-size:18px;font-weight:700;cursor:pointer;color:white;font-family:var(--ff-ui);letter-spacing:0.03em;-webkit-tap-highlight-color:transparent;transition:all .15s;}
-.pbtn:active{background:#1244aa;transform:scale(.98);}
-.pbtn:disabled{background:#ccc;cursor:not-allowed;transform:none;}
-.pbtn.pdf{background:#2e7d32;}
+/* PDFボタンを上・印刷ボタンを下 */
+.btn-col{display:flex;flex-direction:column;gap:10px;}
+.pbtn{width:100%;padding:16px 12px;border:none;border-radius:var(--radius);font-size:17px;font-weight:700;cursor:pointer;font-family:var(--ff-ui);-webkit-tap-highlight-color:transparent;transition:all .15s;text-align:left;line-height:1.4;}
+.pbtn:active{transform:scale(.98);}
+.pbtn:disabled{background:#ccc!important;cursor:not-allowed;transform:none;}
+.pbtn.pdf{background:#2e7d32;color:white;}
 .pbtn.pdf:active{background:#1b5e20;}
-.pbtn.pdf:disabled{background:#ccc;}
-.print-hint{font-size:13px;color:var(--c-muted);margin-top:8px;text-align:center;line-height:1.6;}
+.pbtn.print{background:#f5f4f0;color:#555;border:1.5px solid var(--c-border);}
+.pbtn.print:active{background:#e8e6e0;}
+.pbtn .btn-main{display:block;font-size:18px;}
+.pbtn .btn-sub{display:block;font-size:13px;font-weight:400;margin-top:3px;opacity:.85;}
+
+/* 印刷後ガイド */
+.pdf-guide{display:none;margin-top:12px;background:#e8f5e9;border:1px solid #a5d6a7;border-radius:10px;padding:14px 16px;}
+.pdf-guide.show{display:block;}
+.pdf-guide-title{font-size:15px;font-weight:700;color:#2e7d32;margin-bottom:8px;}
+.pdf-guide ol{padding-left:20px;}
+.pdf-guide li{font-size:14px;color:#333;margin-bottom:6px;line-height:1.6;}
+.pdf-guide li strong{color:#1b5e20;}
+
 .divider{border:none;border-top:1px solid var(--c-border);margin:4px 0 20px;}
 .preview-wrap{position:sticky;top:16px;}
 .prev-meta{font-size:14px;color:var(--c-muted);margin-bottom:6px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:4px;}
@@ -75,7 +86,6 @@ textarea:focus{outline:none;border-color:var(--c-active-border);}
 @media(max-width:600px){
   .group-grid{grid-template-columns:repeat(auto-fill,minmax(120px,1fr));}
   .item-grid{grid-template-columns:repeat(auto-fill,minmax(120px,1fr));}
-  .btn-row{grid-template-columns:1fr;}
 }
 @media print{
   @page{size:var(--print-size,A3) landscape;margin:0;}
@@ -136,14 +146,28 @@ textarea:focus{outline:none;border-color:var(--c-active-border);}
   <hr class="divider">
 
   <div class="print-area">
-    <div class="btn-row">
-      <button class="pbtn" id="print-btn" onclick="doPrint()" disabled>🖨 印刷</button>
-      <button class="pbtn pdf" id="pdf-btn" onclick="doPDF()" disabled>📄 PDFで保存</button>
+    <div class="btn-col">
+      <!-- PDFボタン（上・メイン） -->
+      <button class="pbtn pdf" id="pdf-btn" onclick="doPDF()" disabled>
+        <span class="btn-main">📄 PDFで保存して印刷</span>
+        <span class="btn-sub">iPad・iPhone はこちら</span>
+      </button>
+      <!-- 印刷ボタン（下・サブ） -->
+      <button class="pbtn print" id="print-btn" onclick="doPrint()" disabled>
+        <span class="btn-main">🖨 印刷する</span>
+        <span class="btn-sub">PCはこちら（横向き・余白なしで印刷）</span>
+      </button>
     </div>
-    <p class="print-hint">
-      PC：印刷ボタン → 横向き・余白なし<br>
-      iPad/iPhone：PDFで保存 → 開いたPDFから印刷
-    </p>
+
+    <!-- PDF保存後のガイド -->
+    <div class="pdf-guide" id="pdf-guide">
+      <div class="pdf-guide-title">📄 PDFが開いたら…</div>
+      <ol>
+        <li>画面上の <strong>共有ボタン（□↑）</strong> をタップ</li>
+        <li>メニューから <strong>「プリント」</strong> をタップ</li>
+        <li>プリンターを選んで <strong>用紙サイズを確認</strong> し印刷</li>
+      </ol>
+    </div>
   </div>
 </div>
 
@@ -167,7 +191,6 @@ textarea:focus{outline:none;border-color:var(--c-active-border);}
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
 <script>
 const CSV_URL='https://docs.google.com/spreadsheets/d/e/2PACX-1vSqFm7X3Dk4yZJqSx_SzoGOlCdFzQmOgVorngEKD5pD-cHax7BLGfm_GPmNU8aYslep_FS-jz8F4KJD/pub?gid=0&single=true&output=csv';
 const GROUP_EMOJI={'結婚':'💍','出産・入学・卒業':'🌸','長寿・結婚記念':'🎊','快気祝い':'🌿','お見舞い':'💐','弔辞':'🕯️'};
@@ -250,6 +273,7 @@ function pickGroup(btn){
   document.getElementById('print-btn').disabled=true;
   document.getElementById('pdf-btn').disabled=true;
   document.getElementById('prev-noshi-name').textContent='';
+  document.getElementById('pdf-guide').classList.remove('show');
   render();
 }
 
@@ -290,13 +314,11 @@ function makeSVGstr(wMm,hMm){
   const nameRaw=document.getElementById('name').value.trim();
   const names=nameRaw?nameRaw.split('\n').map(s=>s.trim()).filter(Boolean).slice(0,3):[];
   const scaleX=wMm/BASE_W,scaleY=hMm/BASE_H;
-
   let els=`<rect width="${wMm}" height="${hMm}" fill="white"/>`;
   if(curItem&&curItem.img){
     els+=`<image href="${curItem.img}.jpg" x="0" y="0" width="${wMm}" height="${hMm}" preserveAspectRatio="xMidYMid slice"/>`;
   }
   if(!curItem)return`<svg viewBox="0 0 ${wMm} ${hMm}" xmlns="http://www.w3.org/2000/svg">${els}</svg>`;
-
   const oChars=curItem.omote.split('');
   const{fs:oFs,step:oStep,totalH:oTotalH}=calcVert(oChars.length,O_BASE,O_H);
   const oStartY=(O_TOP+O_BOTTOM)/2-oTotalH/2;
@@ -343,7 +365,6 @@ function doPrint(){
   window.print();
 }
 
-// Canvas経由でPDF生成
 async function doPDF(){
   if(!curItem)return;
   const s=SIZES[curSize];
@@ -351,33 +372,33 @@ async function doPDF(){
   overlay.classList.add('show');
 
   try{
-    // 300dpi相当のCanvasサイズ
-    const PPI=300,MPI=25.4;
-    const cw=Math.round(s.w/MPI*PPI);
-    const ch=Math.round(s.h/MPI*PPI);
+    // 高解像度Canvas（200dpi：画質とメモリのバランス）
+    const DPI=200,MPI=25.4;
+    const cw=Math.round(s.w/MPI*DPI);
+    const ch=Math.round(s.h/MPI*DPI);
 
     const canvas=document.createElement('canvas');
     canvas.width=cw;canvas.height=ch;
     const ctx=canvas.getContext('2d');
-
-    // 背景白
     ctx.fillStyle='white';
     ctx.fillRect(0,0,cw,ch);
 
-    // 背景画像を描画
+    // 背景画像をbase64経由で描画（CORS回避）
     if(curItem.img){
       await new Promise((resolve)=>{
         const img=new Image();
-        img.crossOrigin='anonymous';
+        // GitHubPages同一オリジンなのでcrossOriginは不要だが念のため
         img.onload=()=>{
-          // cover fit
           const scale=Math.max(cw/img.width,ch/img.height);
           const dw=img.width*scale,dh=img.height*scale;
-          const dx=(cw-dw)/2,dy=(ch-dh)/2;
-          ctx.drawImage(img,dx,dy,dw,dh);
+          ctx.drawImage(img,(cw-dw)/2,(ch-dh)/2,dw,dh);
           resolve();
         };
-        img.onerror=()=>resolve(); // 画像なくても続行
+        img.onerror=()=>{
+          // 画像読み込み失敗時は白背景のまま続行
+          resolve();
+        };
+        // キャッシュバスターは付けずシンプルに
         img.src=curItem.img+'.jpg';
       });
     }
@@ -387,25 +408,20 @@ async function doPDF(){
     const scaleX=cw/BASE_W,scaleY=ch/BASE_H;
     const nameRaw=document.getElementById('name').value.trim();
     const names=nameRaw?nameRaw.split('\n').map(s=>s.trim()).filter(Boolean).slice(0,3):[];
-
-    // フォント（Canvasで使えるもの）
     const canvasFF="'Hiragino Mincho ProN','Noto Serif JP','Yu Mincho',serif";
-
-    // 表書き
-    const oChars=curItem.omote.split('');
-    const{fs:oFs,step:oStep,totalH:oTotalH}=calcVert(oChars.length,O_BASE,O_H);
-    const oStartY=(O_TOP+O_BOTTOM)/2-oTotalH/2;
     ctx.fillStyle=ink;
     ctx.textAlign='center';
+    ctx.textBaseline='alphabetic';
+
+    const oChars=curItem.omote.split('');
+    const{fs:oFs,step:oStep}=calcVert(oChars.length,O_BASE,O_H);
+    const{totalH:oTotalH}=calcVert(oChars.length,O_BASE,O_H);
+    const oStartY=(O_TOP+O_BOTTOM)/2-oTotalH/2;
     oChars.forEach((c,i)=>{
       const fsPx=oFs*scaleY;
       ctx.font=`700 ${fsPx}px ${canvasFF}`;
-      const x=BASE_W/2*scaleX;
-      const y=(oStartY+oFs*0.85+i*oFs*oStep)*scaleY;
-      ctx.fillText(c,x,y);
+      ctx.fillText(c,BASE_W/2*scaleX,(oStartY+oFs*0.85+i*oFs*oStep)*scaleY);
     });
-
-    // 添え文字
     if(curItem.soe){
       const soeChars=curItem.soe.split('');
       const{fs:sFs,step:sSp}=calcSoeVert(soeChars.length,SOE_BASE,BASE_H-SOE_TOP-20);
@@ -413,12 +429,9 @@ async function doPDF(){
       soeChars.forEach((c,i)=>{
         const fsPx=sFs*scaleY;
         ctx.font=`700 ${fsPx}px ${canvasFF}`;
-        const y=(SOE_TOP+sFs*0.85+i*sFs*sSp)*scaleY;
-        ctx.fillText(c,soeX,y);
+        ctx.fillText(c,soeX,(SOE_TOP+sFs*0.85+i*sFs*sSp)*scaleY);
       });
     }
-
-    // 名前
     if(names.length>0){
       const maxLen=Math.max(...names.map(n=>n.length));
       const{fs:nFs,step:nStep,totalH:nTotalH}=calcVert(maxLen,N_BASE,N_H);
@@ -430,20 +443,26 @@ async function doPDF(){
         name.split('').forEach((nc,ni)=>{
           const fsPx=nFs*scaleY;
           ctx.font=`700 ${fsPx}px ${canvasFF}`;
-          const y=(nStartY+nFs*0.85+ni*nFs*nStep)*scaleY;
-          ctx.fillText(nc,colX,y);
+          ctx.fillText(nc,colX,(nStartY+nFs*0.85+ni*nFs*nStep)*scaleY);
         });
       });
     }
 
-    // CanvasをJPEGに変換してjsPDFに渡す
-    const imgData=canvas.toDataURL('image/jpeg',0.95);
+    // jsPDF：用紙サイズをmmで明示指定（AirPrintがA3と認識するために重要）
     const{jsPDF}=window.jspdf;
-    const doc=new jsPDF({orientation:'landscape',unit:'mm',format:[s.w,s.h]});
-    doc.addImage(imgData,'JPEG',0,0,s.w,s.h);
+    const doc=new jsPDF({
+      orientation:'landscape',
+      unit:'mm',
+      format:[s.w,s.h]  // ← A3なら[420,297]を明示
+    });
+    const imgData=canvas.toDataURL('image/jpeg',0.92);
+    doc.addImage(imgData,'JPEG',0,0,s.w,s.h,undefined,'FAST');
 
     const filename='noshi_'+curItem.omote+(curItem.soe?'_'+curItem.soe:'')+'_'+s.label+'.pdf';
     doc.save(filename);
+
+    // ガイドを表示
+    document.getElementById('pdf-guide').classList.add('show');
 
   }catch(e){
     alert('PDF生成に失敗しました。\n'+e.message);
