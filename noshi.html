@@ -51,13 +51,13 @@ textarea:focus{outline:none;border-color:var(--c-active-border);}
 .sbtn:active{transform:scale(.97);}
 .sbtn.on{background:var(--c-active-bg);border-color:var(--c-active-border);color:var(--c-active-text);}
 .print-area{margin-top:4px;}
-/* ボタン2つ並べる */
 .btn-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
 .pbtn{width:100%;padding:16px;background:#1a56cc;border:none;border-radius:var(--radius);font-size:18px;font-weight:700;cursor:pointer;color:white;font-family:var(--ff-ui);letter-spacing:0.03em;-webkit-tap-highlight-color:transparent;transition:all .15s;}
 .pbtn:active{background:#1244aa;transform:scale(.98);}
 .pbtn:disabled{background:#ccc;cursor:not-allowed;transform:none;}
 .pbtn.pdf{background:#2e7d32;}
 .pbtn.pdf:active{background:#1b5e20;}
+.pbtn.pdf:disabled{background:#ccc;}
 .print-hint{font-size:13px;color:var(--c-muted);margin-top:8px;text-align:center;line-height:1.6;}
 .divider{border:none;border-top:1px solid var(--c-border);margin:4px 0 20px;}
 .preview-wrap{position:sticky;top:16px;}
@@ -68,7 +68,6 @@ textarea:focus{outline:none;border-color:var(--c-active-border);}
 .prev-inner svg{width:100%;height:100%;display:block;}
 .loading{text-align:center;padding:28px;font-size:16px;color:#aaa;}
 .error-msg{font-size:14px;color:#c0392b;padding:10px;background:#fdf0ef;border-radius:8px;margin-top:8px;line-height:1.7;}
-/* 生成中オーバーレイ */
 #overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:100;align-items:center;justify-content:center;}
 #overlay.show{display:flex;}
 .overlay-box{background:white;border-radius:14px;padding:32px 40px;text-align:center;font-size:17px;color:#333;font-family:var(--ff-ui);}
@@ -162,20 +161,12 @@ textarea:focus{outline:none;border-color:var(--c-active-border);}
 </div>
 </div>
 
-<!-- 印刷専用 -->
 <div id="print-page" style="display:none;"></div>
-
-<!-- 生成中オーバーレイ -->
 <div id="overlay">
-  <div class="overlay-box">
-    ⏳ PDF を生成しています...
-    <p>しばらくお待ちください</p>
-  </div>
+  <div class="overlay-box">⏳ PDF を生成しています...<p>しばらくお待ちください</p></div>
 </div>
 
-<!-- jsPDF + svg2pdf -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/svg2pdf.js/2.2.3/svg2pdf.umd.min.js"></script>
 
 <script>
 const CSV_URL='https://docs.google.com/spreadsheets/d/e/2PACX-1vSqFm7X3Dk4yZJqSx_SzoGOlCdFzQmOgVorngEKD5pD-cHax7BLGfm_GPmNU8aYslep_FS-jz8F4KJD/pub?gid=0&single=true&output=csv';
@@ -294,8 +285,7 @@ function calcSoeVert(n,baseFs,availH){
   return{fs,step,totalH};
 }
 
-// SVG文字列を生成（mm単位で直接指定）
-function makeSVGmm(wMm,hMm){
+function makeSVGstr(wMm,hMm){
   const ink=(curItem&&curItem.usumeki)?'#888888':'#111111';
   const nameRaw=document.getElementById('name').value.trim();
   const names=nameRaw?nameRaw.split('\n').map(s=>s.trim()).filter(Boolean).slice(0,3):[];
@@ -305,23 +295,22 @@ function makeSVGmm(wMm,hMm){
   if(curItem&&curItem.img){
     els+=`<image href="${curItem.img}.jpg" x="0" y="0" width="${wMm}" height="${hMm}" preserveAspectRatio="xMidYMid slice"/>`;
   }
-  if(!curItem)return`<svg viewBox="0 0 ${wMm} ${hMm}" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">${els}</svg>`;
+  if(!curItem)return`<svg viewBox="0 0 ${wMm} ${hMm}" xmlns="http://www.w3.org/2000/svg">${els}</svg>`;
 
   const oChars=curItem.omote.split('');
   const{fs:oFs,step:oStep,totalH:oTotalH}=calcVert(oChars.length,O_BASE,O_H);
   const oStartY=(O_TOP+O_BOTTOM)/2-oTotalH/2;
-  const omoteX=BASE_W/2;
   oChars.forEach((c,i)=>{
-    const y=oStartY+oFs*0.85+i*oFs*oStep;
-    els+=`<text x="${omoteX*scaleX}" y="${y*scaleY}" text-anchor="middle" font-size="${oFs*scaleY}" font-weight="700" font-family="${FF}" fill="${ink}">${c}</text>`;
+    const y=(oStartY+oFs*0.85+i*oFs*oStep)*scaleY;
+    els+=`<text x="${BASE_W/2*scaleX}" y="${y}" text-anchor="middle" font-size="${oFs*scaleY}" font-weight="700" font-family="${FF}" fill="${ink}">${c}</text>`;
   });
   if(curItem.soe){
     const soeChars=curItem.soe.split('');
     const{fs:sFs,step:sSp}=calcSoeVert(soeChars.length,SOE_BASE,BASE_H-SOE_TOP-20);
-    const soeX=omoteX+oFs/2+SOE_OMOTE_GAP+sFs/2;
+    const soeX=(BASE_W/2+oFs/2+SOE_OMOTE_GAP+sFs/2)*scaleX;
     soeChars.forEach((c,i)=>{
-      const y=SOE_TOP+sFs*0.85+i*sFs*sSp;
-      els+=`<text x="${soeX*scaleX}" y="${y*scaleY}" text-anchor="middle" font-size="${sFs*scaleY}" font-weight="700" font-family="${FF}" fill="${ink}">${c}</text>`;
+      const y=(SOE_TOP+sFs*0.85+i*sFs*sSp)*scaleY;
+      els+=`<text x="${soeX}" y="${y}" text-anchor="middle" font-size="${sFs*scaleY}" font-weight="700" font-family="${FF}" fill="${ink}">${c}</text>`;
     });
   }
   if(names.length>0){
@@ -331,31 +320,30 @@ function makeSVGmm(wMm,hMm){
     const colGap=nFs*1.6;
     const rightmostX=BASE_W/2+(names.length-1)*colGap/2;
     names.forEach((name,ci)=>{
-      const colXmm=rightmostX-ci*colGap;
+      const colX=(rightmostX-ci*colGap)*scaleX;
       name.split('').forEach((nc,ni)=>{
-        const y=nStartY+nFs*0.85+ni*nFs*nStep;
-        els+=`<text x="${colXmm*scaleX}" y="${y*scaleY}" text-anchor="middle" font-size="${nFs*scaleY}" font-weight="700" font-family="${FF}" fill="${ink}">${nc}</text>`;
+        const y=(nStartY+nFs*0.85+ni*nFs*nStep)*scaleY;
+        els+=`<text x="${colX}" y="${y}" text-anchor="middle" font-size="${nFs*scaleY}" font-weight="700" font-family="${FF}" fill="${ink}">${nc}</text>`;
       });
     });
   }
-  return`<svg viewBox="0 0 ${wMm} ${hMm}" width="${wMm}mm" height="${hMm}mm" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">${els}</svg>`;
+  return`<svg viewBox="0 0 ${wMm} ${hMm}" xmlns="http://www.w3.org/2000/svg">${els}</svg>`;
 }
 
 function render(){
   const s=SIZES[curSize];
-  const scaleX=s.w/BASE_W,scaleY=s.h/BASE_H;
-  // プレビューはpx換算（1mm≒3.78px）
-  document.getElementById('prev').innerHTML=makeSVGmm(s.w,s.h);
+  document.getElementById('prev').innerHTML=makeSVGstr(s.w,s.h);
 }
 
 function doPrint(){
   if(!curItem)return;
   const s=SIZES[curSize];
   document.documentElement.style.setProperty('--print-size',s.printSize);
-  document.getElementById('print-page').innerHTML=makeSVGmm(s.w,s.h);
+  document.getElementById('print-page').innerHTML=makeSVGstr(s.w,s.h);
   window.print();
 }
 
+// Canvas経由でPDF生成
 async function doPDF(){
   if(!curItem)return;
   const s=SIZES[curSize];
@@ -363,28 +351,103 @@ async function doPDF(){
   overlay.classList.add('show');
 
   try{
-    const {jsPDF}=window.jspdf;
+    // 300dpi相当のCanvasサイズ
+    const PPI=300,MPI=25.4;
+    const cw=Math.round(s.w/MPI*PPI);
+    const ch=Math.round(s.h/MPI*PPI);
+
+    const canvas=document.createElement('canvas');
+    canvas.width=cw;canvas.height=ch;
+    const ctx=canvas.getContext('2d');
+
+    // 背景白
+    ctx.fillStyle='white';
+    ctx.fillRect(0,0,cw,ch);
+
+    // 背景画像を描画
+    if(curItem.img){
+      await new Promise((resolve)=>{
+        const img=new Image();
+        img.crossOrigin='anonymous';
+        img.onload=()=>{
+          // cover fit
+          const scale=Math.max(cw/img.width,ch/img.height);
+          const dw=img.width*scale,dh=img.height*scale;
+          const dx=(cw-dw)/2,dy=(ch-dh)/2;
+          ctx.drawImage(img,dx,dy,dw,dh);
+          resolve();
+        };
+        img.onerror=()=>resolve(); // 画像なくても続行
+        img.src=curItem.img+'.jpg';
+      });
+    }
+
+    // 文字描画
+    const ink=(curItem.usumeki)?'#888888':'#111111';
+    const scaleX=cw/BASE_W,scaleY=ch/BASE_H;
+    const nameRaw=document.getElementById('name').value.trim();
+    const names=nameRaw?nameRaw.split('\n').map(s=>s.trim()).filter(Boolean).slice(0,3):[];
+
+    // フォント（Canvasで使えるもの）
+    const canvasFF="'Hiragino Mincho ProN','Noto Serif JP','Yu Mincho',serif";
+
+    // 表書き
+    const oChars=curItem.omote.split('');
+    const{fs:oFs,step:oStep,totalH:oTotalH}=calcVert(oChars.length,O_BASE,O_H);
+    const oStartY=(O_TOP+O_BOTTOM)/2-oTotalH/2;
+    ctx.fillStyle=ink;
+    ctx.textAlign='center';
+    oChars.forEach((c,i)=>{
+      const fsPx=oFs*scaleY;
+      ctx.font=`700 ${fsPx}px ${canvasFF}`;
+      const x=BASE_W/2*scaleX;
+      const y=(oStartY+oFs*0.85+i*oFs*oStep)*scaleY;
+      ctx.fillText(c,x,y);
+    });
+
+    // 添え文字
+    if(curItem.soe){
+      const soeChars=curItem.soe.split('');
+      const{fs:sFs,step:sSp}=calcSoeVert(soeChars.length,SOE_BASE,BASE_H-SOE_TOP-20);
+      const soeX=(BASE_W/2+oFs/2+SOE_OMOTE_GAP+sFs/2)*scaleX;
+      soeChars.forEach((c,i)=>{
+        const fsPx=sFs*scaleY;
+        ctx.font=`700 ${fsPx}px ${canvasFF}`;
+        const y=(SOE_TOP+sFs*0.85+i*sFs*sSp)*scaleY;
+        ctx.fillText(c,soeX,y);
+      });
+    }
+
+    // 名前
+    if(names.length>0){
+      const maxLen=Math.max(...names.map(n=>n.length));
+      const{fs:nFs,step:nStep,totalH:nTotalH}=calcVert(maxLen,N_BASE,N_H);
+      const nStartY=(N_TOP+N_BOTTOM)/2-nTotalH/2;
+      const colGap=nFs*1.6;
+      const rightmostX=BASE_W/2+(names.length-1)*colGap/2;
+      names.forEach((name,ci)=>{
+        const colX=(rightmostX-ci*colGap)*scaleX;
+        name.split('').forEach((nc,ni)=>{
+          const fsPx=nFs*scaleY;
+          ctx.font=`700 ${fsPx}px ${canvasFF}`;
+          const y=(nStartY+nFs*0.85+ni*nFs*nStep)*scaleY;
+          ctx.fillText(nc,colX,y);
+        });
+      });
+    }
+
+    // CanvasをJPEGに変換してjsPDFに渡す
+    const imgData=canvas.toDataURL('image/jpeg',0.95);
+    const{jsPDF}=window.jspdf;
     const doc=new jsPDF({orientation:'landscape',unit:'mm',format:[s.w,s.h]});
-
-    // SVG要素を一時的にDOMに追加してsvg2pdfに渡す
-    const svgStr=makeSVGmm(s.w,s.h);
-    const parser=new DOMParser();
-    const svgDoc=parser.parseFromString(svgStr,'image/svg+xml');
-    const svgEl=svgDoc.documentElement;
-
-    // 一時コンテナ（画面外）
-    const container=document.createElement('div');
-    container.style.cssText='position:fixed;left:-9999px;top:-9999px;width:'+s.w+'mm;height:'+s.h+'mm;';
-    container.appendChild(svgEl);
-    document.body.appendChild(container);
-
-    await svg2pdf(svgEl,doc,{x:0,y:0,width:s.w,height:s.h});
-    document.body.removeChild(container);
+    doc.addImage(imgData,'JPEG',0,0,s.w,s.h);
 
     const filename='noshi_'+curItem.omote+(curItem.soe?'_'+curItem.soe:'')+'_'+s.label+'.pdf';
     doc.save(filename);
+
   }catch(e){
     alert('PDF生成に失敗しました。\n'+e.message);
+    console.error(e);
   }finally{
     overlay.classList.remove('show');
   }
