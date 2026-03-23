@@ -18,9 +18,16 @@
 body{font-family:var(--ff-ui);background:var(--c-bg);min-height:100vh;font-size:16px;}
 #app{padding:16px;}
 .page-title{font-size:20px;font-weight:700;color:#222;margin-bottom:20px;letter-spacing:0.03em;}
+
+/* ============ レイアウト ============ */
+/* PC（900px以上）：左パネル＋右プレビュー横並び */
 .layout{display:grid;grid-template-columns:1fr 400px;gap:20px;align-items:start;}
+/* タブレット以下：縦並び */
 @media(max-width:900px){.layout{grid-template-columns:1fr;}}
+
 .panel{background:var(--c-panel);border:1px solid var(--c-border);border-radius:14px;padding:20px;}
+
+/* ============ ステップ ============ */
 .step-block{margin-bottom:24px;transition:opacity .2s;}
 .step-block.locked{opacity:.35;pointer-events:none;}
 .step-header{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
@@ -29,6 +36,8 @@ body{font-family:var(--ff-ui);background:var(--c-bg);min-height:100vh;font-size:
 .step-block.active .step-badge{background:var(--c-active-border);color:white;}
 .step-title{font-size:17px;font-weight:700;color:#222;}
 .step-block.locked .step-title{color:#bbb;}
+
+/* ============ ボタン系 ============ */
 .group-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px;}
 .gbtn{background:#faf9f7;border:1.5px solid var(--c-border);border-radius:var(--radius);padding:14px 8px;font-size:17px;font-weight:600;cursor:pointer;color:#333;text-align:center;line-height:1.4;font-family:var(--ff-ui);-webkit-tap-highlight-color:transparent;transition:all .15s;}
 .gbtn:active{transform:scale(.97);}
@@ -45,44 +54,72 @@ body{font-family:var(--ff-ui);background:var(--c-bg);min-height:100vh;font-size:
 textarea{width:100%;border:1.5px solid var(--c-border);border-radius:var(--radius);padding:12px;font-family:var(--ff-ui);font-size:18px;resize:vertical;min-height:80px;color:#333;background:white;line-height:1.6;}
 textarea:focus{outline:none;border-color:var(--c-active-border);}
 .hint{font-size:14px;color:var(--c-muted);margin-top:6px;line-height:1.6;}
-.size-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;}
+
+/* サイズ（A3/A4のみ） */
+.size-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
 .sbtn{background:#faf9f7;border:1.5px solid var(--c-border);border-radius:var(--radius);padding:12px 4px;font-size:17px;font-weight:600;cursor:pointer;color:#333;text-align:center;font-family:var(--ff-ui);-webkit-tap-highlight-color:transparent;transition:all .15s;}
 .sbtn:active{transform:scale(.97);}
 .sbtn.on{background:var(--c-active-bg);border-color:var(--c-active-border);color:var(--c-active-text);}
-.print-area{margin-top:4px;}
-/* PDFボタンを上・印刷ボタンを下 */
-.btn-col{display:flex;flex-direction:column;gap:10px;}
-.pbtn{width:100%;padding:16px 12px;border:none;border-radius:var(--radius);font-size:17px;font-weight:700;cursor:pointer;font-family:var(--ff-ui);-webkit-tap-highlight-color:transparent;transition:all .15s;text-align:left;line-height:1.4;}
+
+.divider{border:none;border-top:1px solid var(--c-border);margin:4px 0 20px;}
+
+/* ============ 印刷エリア（パネル内・PC用） ============ */
+/* PCでは .panel 内の #print-area-panel を表示、縦並び時は #print-area-preview を表示 */
+#print-area-panel{display:block;}
+#print-area-preview{display:none;}
+@media(max-width:900px){
+  #print-area-panel{display:none;}
+  #print-area-preview{display:block;}
+}
+
+/* ============ タブ ============ */
+.tab-row{display:flex;gap:0;margin-bottom:16px;border:1.5px solid var(--c-border);border-radius:var(--radius);overflow:hidden;}
+.tab-btn{flex:1;padding:12px 8px;font-size:15px;font-weight:600;cursor:pointer;color:#888;background:#faf9f7;border:none;font-family:var(--ff-ui);-webkit-tap-highlight-color:transparent;transition:all .15s;}
+.tab-btn:first-child{border-right:1px solid var(--c-border);}
+.tab-btn.on{background:var(--c-active-bg);color:var(--c-active-text);}
+.tab-pane{display:none;}
+.tab-pane.on{display:block;}
+
+/* ============ ガイド ============ */
+.guide-box{background:#f0f7ff;border:1.5px solid #b3d4f5;border-radius:12px;padding:16px;margin-bottom:16px;}
+.guide-box.green{background:#f0faf2;border-color:#a5d6a7;}
+.guide-title{font-size:15px;font-weight:700;color:#1a56cc;margin-bottom:12px;display:flex;align-items:center;gap:6px;}
+.guide-box.green .guide-title{color:#2e7d32;}
+.guide-steps{list-style:none;padding:0;}
+.guide-steps li{display:flex;align-items:flex-start;gap:10px;margin-bottom:10px;font-size:14px;line-height:1.6;color:#333;}
+.guide-steps li:last-child{margin-bottom:0;}
+.step-num{width:24px;height:24px;border-radius:50%;background:#1a56cc;color:white;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+.guide-box.green .step-num{background:#2e7d32;}
+.guide-steps li .note{font-size:12px;color:#888;display:block;margin-top:2px;}
+.epson-icon{width:28px;height:28px;border-radius:6px;vertical-align:middle;margin:0 2px;}
+.size-badge{display:inline-block;background:#1a56cc;color:white;font-size:12px;font-weight:700;padding:2px 8px;border-radius:4px;margin:0 2px;}
+.size-badge.green{background:#2e7d32;}
+
+/* ============ 印刷ボタン ============ */
+.pbtn{width:100%;padding:16px 12px;border:none;border-radius:var(--radius);font-size:18px;font-weight:700;cursor:pointer;font-family:var(--ff-ui);-webkit-tap-highlight-color:transparent;transition:all .15s;display:flex;flex-direction:column;align-items:flex-start;}
 .pbtn:active{transform:scale(.98);}
 .pbtn:disabled{background:#ccc!important;cursor:not-allowed;transform:none;}
 .pbtn.pdf{background:#2e7d32;color:white;}
 .pbtn.pdf:active{background:#1b5e20;}
-.pbtn.print{background:#f5f4f0;color:#555;border:1.5px solid var(--c-border);}
-.pbtn.print:active{background:#e8e6e0;}
-.pbtn .btn-main{display:block;font-size:18px;}
-.pbtn .btn-sub{display:block;font-size:13px;font-weight:400;margin-top:3px;opacity:.85;}
+.pbtn.print{background:#f0f0ee;color:#555;border:1.5px solid var(--c-border);}
+.pbtn .btn-main{font-size:18px;}
+.pbtn .btn-sub{font-size:13px;font-weight:400;margin-top:3px;opacity:.85;}
 
-/* 印刷後ガイド */
-.pdf-guide{display:none;margin-top:12px;background:#e8f5e9;border:1px solid #a5d6a7;border-radius:10px;padding:14px 16px;}
-.pdf-guide.show{display:block;}
-.pdf-guide-title{font-size:15px;font-weight:700;color:#2e7d32;margin-bottom:8px;}
-.pdf-guide ol{padding-left:20px;}
-.pdf-guide li{font-size:14px;color:#333;margin-bottom:6px;line-height:1.6;}
-.pdf-guide li strong{color:#1b5e20;}
-
-.divider{border:none;border-top:1px solid var(--c-border);margin:4px 0 20px;}
+/* ============ プレビュー ============ */
 .preview-wrap{position:sticky;top:16px;}
 .prev-meta{font-size:14px;color:var(--c-muted);margin-bottom:6px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:4px;}
 .prev-noshi{font-size:14px;color:#888;}
 .prev-box{background:#d8d6d0;border-radius:10px;width:100%;display:flex;align-items:center;justify-content:center;padding:10px;}
 .prev-inner{background:white;width:100%;border:1px solid #bbb;border-radius:2px;overflow:hidden;}
 .prev-inner svg{width:100%;height:100%;display:block;}
+
 .loading{text-align:center;padding:28px;font-size:16px;color:#aaa;}
 .error-msg{font-size:14px;color:#c0392b;padding:10px;background:#fdf0ef;border-radius:8px;margin-top:8px;line-height:1.7;}
 #overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:100;align-items:center;justify-content:center;}
 #overlay.show{display:flex;}
-.overlay-box{background:white;border-radius:14px;padding:32px 40px;text-align:center;font-size:17px;color:#333;font-family:var(--ff-ui);}
+.overlay-box{background:white;border-radius:14px;padding:32px 40px;text-align:center;font-size:17px;color:#333;}
 .overlay-box p{margin-top:8px;font-size:14px;color:#888;}
+
 @media(max-width:600px){
   .group-grid{grid-template-columns:repeat(auto-fill,minmax(120px,1fr));}
   .item-grid{grid-template-columns:repeat(auto-fill,minmax(120px,1fr));}
@@ -99,8 +136,10 @@ textarea:focus{outline:none;border-color:var(--c-active-border);}
 <div id="app">
 <div class="page-title">🎁 熨斗メーカー</div>
 <div class="layout">
-<div class="panel">
 
+<!-- 左：操作パネル -->
+<div class="panel">
+  <!-- STEP1 -->
   <div class="step-block active" id="step1-block">
     <div class="step-header">
       <div class="step-badge" id="badge1">1</div>
@@ -113,6 +152,7 @@ textarea:focus{outline:none;border-color:var(--c-active-border);}
   </div>
   <hr class="divider">
 
+  <!-- STEP2 -->
   <div class="step-block locked" id="step2-block">
     <div class="step-header">
       <div class="step-badge" id="badge2">2</div>
@@ -122,6 +162,7 @@ textarea:focus{outline:none;border-color:var(--c-active-border);}
   </div>
   <hr class="divider">
 
+  <!-- STEP3 名前 -->
   <div class="step-block" id="step3-block">
     <div class="step-header">
       <div class="step-badge" id="badge3">3</div>
@@ -132,6 +173,7 @@ textarea:focus{outline:none;border-color:var(--c-active-border);}
   </div>
   <hr class="divider">
 
+  <!-- STEP4 サイズ -->
   <div class="step-block" id="step4-block">
     <div class="step-header">
       <div class="step-badge" id="badge4">4</div>
@@ -140,37 +182,17 @@ textarea:focus{outline:none;border-color:var(--c-active-border);}
     <div class="size-grid">
       <button class="sbtn on" data-s="A3" onclick="pickSize(this)">A3</button>
       <button class="sbtn" data-s="A4" onclick="pickSize(this)">A4</button>
-      <button class="sbtn" data-s="B5" onclick="pickSize(this)">B5</button>
     </div>
   </div>
   <hr class="divider">
 
-  <div class="print-area">
-    <div class="btn-col">
-      <!-- PDFボタン（上・メイン） -->
-      <button class="pbtn pdf" id="pdf-btn" onclick="doPDF()" disabled>
-        <span class="btn-main">📄 PDFで保存して印刷</span>
-        <span class="btn-sub">iPad・iPhone はこちら</span>
-      </button>
-      <!-- 印刷ボタン（下・サブ） -->
-      <button class="pbtn print" id="print-btn" onclick="doPrint()" disabled>
-        <span class="btn-main">🖨 印刷する</span>
-        <span class="btn-sub">PCはこちら（横向き・余白なしで印刷）</span>
-      </button>
-    </div>
-
-    <!-- PDF保存後のガイド -->
-    <div class="pdf-guide" id="pdf-guide">
-      <div class="pdf-guide-title">📄 PDFが開いたら…</div>
-      <ol>
-        <li>画面上の <strong>共有ボタン（□↑）</strong> をタップ</li>
-        <li>メニューから <strong>「プリント」</strong> をタップ</li>
-        <li>プリンターを選んで <strong>用紙サイズを確認</strong> し印刷</li>
-      </ol>
-    </div>
+  <!-- 印刷エリア（PC横並び時のみ表示） -->
+  <div id="print-area-panel">
+    <div id="print-area-inner-panel"></div>
   </div>
 </div>
 
+<!-- 右：プレビュー -->
 <div class="preview-wrap">
   <div class="prev-meta">
     <span id="prev-size-lbl">プレビュー（A3横）</span>
@@ -181,9 +203,15 @@ textarea:focus{outline:none;border-color:var(--c-active-border);}
       <div id="prev"></div>
     </div>
   </div>
+
+  <!-- 印刷エリア（縦並び時のみプレビュー下に表示） -->
+  <div id="print-area-preview" style="margin-top:20px;">
+    <div id="print-area-inner-preview"></div>
+  </div>
 </div>
-</div>
-</div>
+
+</div><!-- /layout -->
+</div><!-- /app -->
 
 <div id="print-page" style="display:none;"></div>
 <div id="overlay">
@@ -197,7 +225,6 @@ const GROUP_EMOJI={'結婚':'💍','出産・入学・卒業':'🌸','長寿・�
 const SIZES={
   A3:{w:420,h:297,label:'A3横',printSize:'A3'},
   A4:{w:297,h:210,label:'A4横',printSize:'A4'},
-  B5:{w:257,h:182,label:'B5横',printSize:'B5'},
 };
 const BASE_W=420,BASE_H=297;
 const O_TOP=20,O_BOTTOM=BASE_H/2-30,O_H=O_BOTTOM-O_TOP;
@@ -206,8 +233,88 @@ const O_BASE=22,N_BASE=14;
 const SOE_TOP=23,SOE_BASE=11,SOE_GAP=0.10,SOE_OMOTE_GAP=7;
 const FF="'Hiragino Mincho ProN W6','HiraMinProN-W6','Hiragino Mincho ProN','HiraMinProN-W3','Noto Serif JP','Yu Mincho','YuMincho',serif";
 
-let DATA=[],curGroup=null,curItem=null,curSize='A3';
+let DATA=[],curGroup=null,curItem=null,curSize='A3',curTab='ios';
 
+// ============================================================
+// 印刷エリアHTML生成
+// ============================================================
+function buildPrintArea(){
+  const isA3 = curSize==='A3';
+  const disabled = !curItem ? 'disabled' : '';
+
+  // ガイド：iOS/iPad
+  const guideIOS = isA3 ? `
+    <div class="guide-box">
+      <div class="guide-title">📋 iPad / iPhone での印刷手順（A3）</div>
+      <ol class="guide-steps">
+        <li><span class="step-num">1</span><span>下の「PDFで保存」ボタンをタップ → PDFが開きます</span></li>
+        <li><span class="step-num">2</span><span>画面上の <strong>共有ボタン（□↑）</strong> をタップ</span></li>
+        <li><span class="step-num">3</span><span><img src="epson-smart-panel.png" class="epson-icon" alt="Epson Smart Panel"> <strong>Epson Smart Panel</strong> をタップ<span class="note">※「プリント」ではなくEpson Smart Panelを選んでください</span></span></li>
+        <li><span class="step-num">4</span><span>アプリ内で用紙サイズが <span class="size-badge">A3</span> になっていることを確認</span></li>
+        <li><span class="step-num">5</span><span>🖨 印刷ボタンをタップ → <strong>2階 事務所のプリンター</strong>にA3用紙を手差しして印刷</span></li>
+      </ol>
+    </div>
+  ` : `
+    <div class="guide-box green">
+      <div class="guide-title">📋 iPad / iPhone での印刷手順（A4）</div>
+      <ol class="guide-steps">
+        <li><span class="step-num" style="background:#2e7d32">1</span><span>下の「PDFで保存」ボタンをタップ → PDFが開きます</span></li>
+        <li><span class="step-num" style="background:#2e7d32">2</span><span>画面上の <strong>共有ボタン（□↑）</strong> をタップ</span></li>
+        <li><span class="step-num" style="background:#2e7d32">3</span><span>🖨 <strong>プリント</strong> をタップ</span></li>
+        <li><span class="step-num" style="background:#2e7d32">4</span><span>用紙サイズが <span class="size-badge green">A4</span> であることを確認して印刷<span class="note">1階のプリンターで印刷できます</span></span></li>
+      </ol>
+    </div>
+  `;
+
+  // ガイド：PC
+  const guidePC = `
+    <div class="guide-box green">
+      <div class="guide-title">📋 PC での印刷手順</div>
+      <ol class="guide-steps">
+        <li><span class="step-num" style="background:#2e7d32">1</span><span>下の「印刷する」ボタンをクリック</span></li>
+        <li><span class="step-num" style="background:#2e7d32">2</span><span>印刷ダイアログで <strong>用紙：${isA3?'A3':'A4'}・横向き・余白なし</strong> に設定して印刷</span></li>
+      </ol>
+    </div>
+  `;
+
+  return `
+    <div class="tab-row">
+      <button class="tab-btn ${curTab==='ios'?'on':''}" onclick="switchTab('ios')">📱 iPad / iPhone</button>
+      <button class="tab-btn ${curTab==='pc'?'on':''}" onclick="switchTab('pc')">💻 PC</button>
+    </div>
+
+    <div class="tab-pane ${curTab==='ios'?'on':''}">
+      ${guideIOS}
+      <button class="pbtn pdf" id="pdf-btn-el" onclick="doPDF()" ${disabled}>
+        <span class="btn-main">📄 PDFで保存</span>
+        <span class="btn-sub">タップしてPDFを開く → 上の手順で印刷</span>
+      </button>
+    </div>
+
+    <div class="tab-pane ${curTab==='pc'?'on':''}">
+      ${guidePC}
+      <button class="pbtn print" id="print-btn-el" onclick="doPrint()" ${disabled}>
+        <span class="btn-main">🖨 印刷する</span>
+        <span class="btn-sub">印刷ダイアログが開きます</span>
+      </button>
+    </div>
+  `;
+}
+
+function renderPrintArea(){
+  const html = buildPrintArea();
+  document.getElementById('print-area-inner-panel').innerHTML = html;
+  document.getElementById('print-area-inner-preview').innerHTML = html;
+}
+
+function switchTab(tab){
+  curTab = tab;
+  renderPrintArea();
+}
+
+// ============================================================
+// CSV・データ
+// ============================================================
 function parseCSV(text){
   const lines=text.trim().split('\n');
   const headers=lines[0].split(',').map(h=>h.trim().replace(/^"|"$/g,''));
@@ -230,7 +337,7 @@ async function loadData(){
     const res=await fetch(CSV_URL);
     if(!res.ok)throw new Error('HTTP '+res.status);
     DATA=parseCSV(await res.text());
-    buildGroups();render();
+    buildGroups();render();renderPrintArea();
   }catch(e){
     document.getElementById('group-grid').innerHTML='';
     document.getElementById('load-error').innerHTML='<div class="error-msg">データの読み込みに失敗しました。ネット接続を確認してリロードしてください。<br><small>'+e.message+'</small></div>';
@@ -270,10 +377,8 @@ function pickGroup(btn){
     b.onclick=function(){pickItem(this);};
     grid.appendChild(b);
   });
-  document.getElementById('print-btn').disabled=true;
-  document.getElementById('pdf-btn').disabled=true;
   document.getElementById('prev-noshi-name').textContent='';
-  document.getElementById('pdf-guide').classList.remove('show');
+  renderPrintArea();
   render();
 }
 
@@ -283,9 +388,8 @@ function pickItem(btn){
   curItem=DATA[parseInt(btn.dataset.idx)];
   document.getElementById('step2-block').classList.replace('active','done');
   document.getElementById('badge2').textContent='✓';
-  document.getElementById('print-btn').disabled=false;
-  document.getElementById('pdf-btn').disabled=false;
   document.getElementById('prev-noshi-name').textContent=curItem.noshi||'';
+  renderPrintArea();
   render();
 }
 
@@ -294,9 +398,13 @@ function pickSize(btn){
   btn.classList.add('on');curSize=btn.dataset.s;
   document.getElementById('prev-inner').style.aspectRatio=SIZES[curSize].w+'/'+SIZES[curSize].h;
   document.getElementById('prev-size-lbl').textContent='プレビュー（'+SIZES[curSize].label+'）';
+  renderPrintArea();
   render();
 }
 
+// ============================================================
+// SVG・描画
+// ============================================================
 function getGap(n){if(n<=1)return 0;if(n===2)return 0.35;if(n===3)return 0.20;return 0.10;}
 function calcVert(n,baseFs,availH){
   const step=1+getGap(n);let fs=baseFs,totalH=fs*(1+(n-1)*step);
@@ -370,56 +478,37 @@ async function doPDF(){
   const s=SIZES[curSize];
   const overlay=document.getElementById('overlay');
   overlay.classList.add('show');
-
   try{
-    // 高解像度Canvas（200dpi：画質とメモリのバランス）
     const DPI=200,MPI=25.4;
-    const cw=Math.round(s.w/MPI*DPI);
-    const ch=Math.round(s.h/MPI*DPI);
-
+    const cw=Math.round(s.w/MPI*DPI),ch=Math.round(s.h/MPI*DPI);
     const canvas=document.createElement('canvas');
     canvas.width=cw;canvas.height=ch;
     const ctx=canvas.getContext('2d');
-    ctx.fillStyle='white';
-    ctx.fillRect(0,0,cw,ch);
-
-    // 背景画像をbase64経由で描画（CORS回避）
+    ctx.fillStyle='white';ctx.fillRect(0,0,cw,ch);
     if(curItem.img){
       await new Promise((resolve)=>{
         const img=new Image();
-        // GitHubPages同一オリジンなのでcrossOriginは不要だが念のため
         img.onload=()=>{
           const scale=Math.max(cw/img.width,ch/img.height);
           const dw=img.width*scale,dh=img.height*scale;
           ctx.drawImage(img,(cw-dw)/2,(ch-dh)/2,dw,dh);
           resolve();
         };
-        img.onerror=()=>{
-          // 画像読み込み失敗時は白背景のまま続行
-          resolve();
-        };
-        // キャッシュバスターは付けずシンプルに
+        img.onerror=()=>resolve();
         img.src=curItem.img+'.jpg';
       });
     }
-
-    // 文字描画
     const ink=(curItem.usumeki)?'#888888':'#111111';
     const scaleX=cw/BASE_W,scaleY=ch/BASE_H;
     const nameRaw=document.getElementById('name').value.trim();
     const names=nameRaw?nameRaw.split('\n').map(s=>s.trim()).filter(Boolean).slice(0,3):[];
     const canvasFF="'Hiragino Mincho ProN','Noto Serif JP','Yu Mincho',serif";
-    ctx.fillStyle=ink;
-    ctx.textAlign='center';
-    ctx.textBaseline='alphabetic';
-
+    ctx.fillStyle=ink;ctx.textAlign='center';ctx.textBaseline='alphabetic';
     const oChars=curItem.omote.split('');
-    const{fs:oFs,step:oStep}=calcVert(oChars.length,O_BASE,O_H);
-    const{totalH:oTotalH}=calcVert(oChars.length,O_BASE,O_H);
+    const{fs:oFs,step:oStep,totalH:oTotalH}=calcVert(oChars.length,O_BASE,O_H);
     const oStartY=(O_TOP+O_BOTTOM)/2-oTotalH/2;
     oChars.forEach((c,i)=>{
-      const fsPx=oFs*scaleY;
-      ctx.font=`700 ${fsPx}px ${canvasFF}`;
+      ctx.font=`700 ${oFs*scaleY}px ${canvasFF}`;
       ctx.fillText(c,BASE_W/2*scaleX,(oStartY+oFs*0.85+i*oFs*oStep)*scaleY);
     });
     if(curItem.soe){
@@ -427,8 +516,7 @@ async function doPDF(){
       const{fs:sFs,step:sSp}=calcSoeVert(soeChars.length,SOE_BASE,BASE_H-SOE_TOP-20);
       const soeX=(BASE_W/2+oFs/2+SOE_OMOTE_GAP+sFs/2)*scaleX;
       soeChars.forEach((c,i)=>{
-        const fsPx=sFs*scaleY;
-        ctx.font=`700 ${fsPx}px ${canvasFF}`;
+        ctx.font=`700 ${sFs*scaleY}px ${canvasFF}`;
         ctx.fillText(c,soeX,(SOE_TOP+sFs*0.85+i*sFs*sSp)*scaleY);
       });
     }
@@ -441,32 +529,18 @@ async function doPDF(){
       names.forEach((name,ci)=>{
         const colX=(rightmostX-ci*colGap)*scaleX;
         name.split('').forEach((nc,ni)=>{
-          const fsPx=nFs*scaleY;
-          ctx.font=`700 ${fsPx}px ${canvasFF}`;
+          ctx.font=`700 ${nFs*scaleY}px ${canvasFF}`;
           ctx.fillText(nc,colX,(nStartY+nFs*0.85+ni*nFs*nStep)*scaleY);
         });
       });
     }
-
-    // jsPDF：用紙サイズをmmで明示指定（AirPrintがA3と認識するために重要）
     const{jsPDF}=window.jspdf;
-    const doc=new jsPDF({
-      orientation:'landscape',
-      unit:'mm',
-      format:[s.w,s.h]  // ← A3なら[420,297]を明示
-    });
-    const imgData=canvas.toDataURL('image/jpeg',0.92);
-    doc.addImage(imgData,'JPEG',0,0,s.w,s.h,undefined,'FAST');
-
+    const doc=new jsPDF({orientation:'landscape',unit:'mm',format:[s.w,s.h]});
+    doc.addImage(canvas.toDataURL('image/jpeg',0.92),'JPEG',0,0,s.w,s.h,undefined,'FAST');
     const filename='noshi_'+curItem.omote+(curItem.soe?'_'+curItem.soe:'')+'_'+s.label+'.pdf';
     doc.save(filename);
-
-    // ガイドを表示
-    document.getElementById('pdf-guide').classList.add('show');
-
   }catch(e){
     alert('PDF生成に失敗しました。\n'+e.message);
-    console.error(e);
   }finally{
     overlay.classList.remove('show');
   }
