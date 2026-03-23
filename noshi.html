@@ -11,28 +11,17 @@
 :root{
   --ff-ui:-apple-system,'Hiragino Sans','Yu Gothic UI','Meiryo',sans-serif;
   --ff-noshi:'Hiragino Mincho ProN W6','HiraMinProN-W6','Hiragino Mincho ProN','Noto Serif JP','Yu Mincho',serif;
-  --c-bg:#f5f4f0;
-  --c-panel:#ffffff;
-  --c-border:#e0ddd8;
-  --c-active-bg:#e8f0fe;
-  --c-active-border:#7baaf7;
-  --c-active-text:#1a56cc;
-  --c-muted:#999;
-  --c-step-done:#2e7d32;
-  --radius:10px;
+  --c-bg:#f5f4f0;--c-panel:#ffffff;--c-border:#e0ddd8;
+  --c-active-bg:#e8f0fe;--c-active-border:#7baaf7;--c-active-text:#1a56cc;
+  --c-muted:#999;--c-step-done:#2e7d32;--radius:10px;
 }
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:var(--ff-ui);background:var(--c-bg);min-height:100vh;font-size:16px;}
-
-/* 通常表示エリア */
 #app{padding:16px;}
 .page-title{font-size:20px;font-weight:700;color:#222;margin-bottom:20px;letter-spacing:0.03em;}
-
 .layout{display:grid;grid-template-columns:1fr 400px;gap:20px;align-items:start;}
 @media(max-width:900px){.layout{grid-template-columns:1fr;}}
-
 .panel{background:var(--c-panel);border:1px solid var(--c-border);border-radius:14px;padding:20px;}
-
 .step-block{margin-bottom:24px;transition:opacity .2s;}
 .step-block.locked{opacity:.35;pointer-events:none;}
 .step-header{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
@@ -41,75 +30,68 @@ body{font-family:var(--ff-ui);background:var(--c-bg);min-height:100vh;font-size:
 .step-block.active .step-badge{background:var(--c-active-border);color:white;}
 .step-title{font-size:17px;font-weight:700;color:#222;}
 .step-block.locked .step-title{color:#bbb;}
-
 .group-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px;}
 .gbtn{background:#faf9f7;border:1.5px solid var(--c-border);border-radius:var(--radius);padding:14px 8px;font-size:17px;font-weight:600;cursor:pointer;color:#333;text-align:center;line-height:1.4;font-family:var(--ff-ui);-webkit-tap-highlight-color:transparent;transition:all .15s;}
 .gbtn:active{transform:scale(.97);}
 .gbtn.on{background:var(--c-active-bg);border-color:var(--c-active-border);color:var(--c-active-text);}
 .gbtn .emoji{display:block;font-size:22px;margin-bottom:4px;}
-
 .item-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px;}
 .ibtn{background:#faf9f7;border:1.5px solid var(--c-border);border-radius:var(--radius);padding:12px 8px;font-size:18px;font-weight:600;cursor:pointer;color:#333;text-align:center;line-height:1.5;font-family:var(--ff-ui);-webkit-tap-highlight-color:transparent;transition:all .15s;display:flex;flex-direction:column;align-items:center;gap:4px;}
 .ibtn:active{transform:scale(.97);}
 .ibtn.on{background:var(--c-active-bg);border-color:var(--c-active-border);color:var(--c-active-text);}
 .ibtn .label-row{font-size:18px;font-weight:600;color:#333;white-space:nowrap;}
 .ibtn.on .label-row{color:var(--c-active-text);}
-/* 説明文：13px→14px、色を濃く #666 */
 .ibtn .idesc{font-size:14px;color:#666;font-weight:400;line-height:1.4;text-align:center;}
 .ibtn.on .idesc{color:#5a82cc;}
-
 textarea{width:100%;border:1.5px solid var(--c-border);border-radius:var(--radius);padding:12px;font-family:var(--ff-ui);font-size:18px;resize:vertical;min-height:80px;color:#333;background:white;line-height:1.6;}
 textarea:focus{outline:none;border-color:var(--c-active-border);}
 .hint{font-size:14px;color:var(--c-muted);margin-top:6px;line-height:1.6;}
-
 .size-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;}
 .sbtn{background:#faf9f7;border:1.5px solid var(--c-border);border-radius:var(--radius);padding:12px 4px;font-size:17px;font-weight:600;cursor:pointer;color:#333;text-align:center;font-family:var(--ff-ui);-webkit-tap-highlight-color:transparent;transition:all .15s;}
 .sbtn:active{transform:scale(.97);}
 .sbtn.on{background:var(--c-active-bg);border-color:var(--c-active-border);color:var(--c-active-text);}
-
 .print-area{margin-top:4px;}
-.pbtn{width:100%;padding:16px;background:#1a56cc;border:none;border-radius:var(--radius);font-size:20px;font-weight:700;cursor:pointer;color:white;font-family:var(--ff-ui);letter-spacing:0.05em;-webkit-tap-highlight-color:transparent;transition:all .15s;}
+/* ボタン2つ並べる */
+.btn-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.pbtn{width:100%;padding:16px;background:#1a56cc;border:none;border-radius:var(--radius);font-size:18px;font-weight:700;cursor:pointer;color:white;font-family:var(--ff-ui);letter-spacing:0.03em;-webkit-tap-highlight-color:transparent;transition:all .15s;}
 .pbtn:active{background:#1244aa;transform:scale(.98);}
 .pbtn:disabled{background:#ccc;cursor:not-allowed;transform:none;}
-.print-hint{font-size:14px;color:var(--c-muted);margin-top:6px;text-align:center;}
-
+.pbtn.pdf{background:#2e7d32;}
+.pbtn.pdf:active{background:#1b5e20;}
+.print-hint{font-size:13px;color:var(--c-muted);margin-top:8px;text-align:center;line-height:1.6;}
 .divider{border:none;border-top:1px solid var(--c-border);margin:4px 0 20px;}
-
 .preview-wrap{position:sticky;top:16px;}
 .prev-meta{font-size:14px;color:var(--c-muted);margin-bottom:6px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:4px;}
 .prev-noshi{font-size:14px;color:#888;}
 .prev-box{background:#d8d6d0;border-radius:10px;width:100%;display:flex;align-items:center;justify-content:center;padding:10px;}
 .prev-inner{background:white;width:100%;border:1px solid #bbb;border-radius:2px;overflow:hidden;}
 .prev-inner svg{width:100%;height:100%;display:block;}
-
 .loading{text-align:center;padding:28px;font-size:16px;color:#aaa;}
 .error-msg{font-size:14px;color:#c0392b;padding:10px;background:#fdf0ef;border-radius:8px;margin-top:8px;line-height:1.7;}
-
-/* ===== 印刷専用ページ ===== */
-/* 印刷時は #app を隠して #print-page だけ見せる */
-#print-page{display:none;}
-
-@media print{
-  @page{size:var(--print-size,A3) landscape;margin:0;}
-  #app{display:none !important;}
-  #print-page{display:block !important;position:fixed;inset:0;background:white;}
-  #print-page svg{width:100vw;height:100vh;display:block;}
-}
-
+/* 生成中オーバーレイ */
+#overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:100;align-items:center;justify-content:center;}
+#overlay.show{display:flex;}
+.overlay-box{background:white;border-radius:14px;padding:32px 40px;text-align:center;font-size:17px;color:#333;font-family:var(--ff-ui);}
+.overlay-box p{margin-top:8px;font-size:14px;color:#888;}
 @media(max-width:600px){
   .group-grid{grid-template-columns:repeat(auto-fill,minmax(120px,1fr));}
   .item-grid{grid-template-columns:repeat(auto-fill,minmax(120px,1fr));}
+  .btn-row{grid-template-columns:1fr;}
+}
+@media print{
+  @page{size:var(--print-size,A3) landscape;margin:0;}
+  #app{display:none!important;}
+  #print-page{display:block!important;position:fixed;inset:0;background:white;}
+  #print-page svg{width:100vw;height:100vh;display:block;}
 }
 </style>
 </head>
 <body>
-
-<!-- 通常表示 -->
 <div id="app">
 <div class="page-title">🎁 熨斗メーカー</div>
 <div class="layout">
-
 <div class="panel">
+
   <div class="step-block active" id="step1-block">
     <div class="step-header">
       <div class="step-badge" id="badge1">1</div>
@@ -155,8 +137,14 @@ textarea:focus{outline:none;border-color:var(--c-active-border);}
   <hr class="divider">
 
   <div class="print-area">
-    <button class="pbtn" id="print-btn" onclick="doPrint()" disabled>🖨　印刷する</button>
-    <p class="print-hint">印刷ダイアログ → 横向き・余白なし に設定してください</p>
+    <div class="btn-row">
+      <button class="pbtn" id="print-btn" onclick="doPrint()" disabled>🖨 印刷</button>
+      <button class="pbtn pdf" id="pdf-btn" onclick="doPDF()" disabled>📄 PDFで保存</button>
+    </div>
+    <p class="print-hint">
+      PC：印刷ボタン → 横向き・余白なし<br>
+      iPad/iPhone：PDFで保存 → 開いたPDFから印刷
+    </p>
   </div>
 </div>
 
@@ -171,12 +159,23 @@ textarea:focus{outline:none;border-color:var(--c-active-border);}
     </div>
   </div>
 </div>
+</div>
+</div>
 
-</div><!-- /layout -->
-</div><!-- /app -->
+<!-- 印刷専用 -->
+<div id="print-page" style="display:none;"></div>
 
-<!-- 印刷専用エリア（@media print でのみ表示） -->
-<div id="print-page"></div>
+<!-- 生成中オーバーレイ -->
+<div id="overlay">
+  <div class="overlay-box">
+    ⏳ PDF を生成しています...
+    <p>しばらくお待ちください</p>
+  </div>
+</div>
+
+<!-- jsPDF + svg2pdf -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/svg2pdf.js/2.2.3/svg2pdf.umd.min.js"></script>
 
 <script>
 const CSV_URL='https://docs.google.com/spreadsheets/d/e/2PACX-1vSqFm7X3Dk4yZJqSx_SzoGOlCdFzQmOgVorngEKD5pD-cHax7BLGfm_GPmNU8aYslep_FS-jz8F4KJD/pub?gid=0&single=true&output=csv';
@@ -258,6 +257,7 @@ function pickGroup(btn){
     grid.appendChild(b);
   });
   document.getElementById('print-btn').disabled=true;
+  document.getElementById('pdf-btn').disabled=true;
   document.getElementById('prev-noshi-name').textContent='';
   render();
 }
@@ -269,6 +269,7 @@ function pickItem(btn){
   document.getElementById('step2-block').classList.replace('active','done');
   document.getElementById('badge2').textContent='✓';
   document.getElementById('print-btn').disabled=false;
+  document.getElementById('pdf-btn').disabled=false;
   document.getElementById('prev-noshi-name').textContent=curItem.noshi||'';
   render();
 }
@@ -293,32 +294,34 @@ function calcSoeVert(n,baseFs,availH){
   return{fs,step,totalH};
 }
 
-function makeSVG(w,h){
-  const scaleX=w/BASE_W,scaleY=h/BASE_H;
+// SVG文字列を生成（mm単位で直接指定）
+function makeSVGmm(wMm,hMm){
   const ink=(curItem&&curItem.usumeki)?'#888888':'#111111';
   const nameRaw=document.getElementById('name').value.trim();
   const names=nameRaw?nameRaw.split('\n').map(s=>s.trim()).filter(Boolean).slice(0,3):[];
-  let els=`<rect width="${w}" height="${h}" fill="white"/>`;
+  const scaleX=wMm/BASE_W,scaleY=hMm/BASE_H;
+
+  let els=`<rect width="${wMm}" height="${hMm}" fill="white"/>`;
   if(curItem&&curItem.img){
-    els+=`<image href="${curItem.img}.jpg" x="0" y="0" width="${w}" height="${h}" preserveAspectRatio="xMidYMid slice"/>`;
+    els+=`<image href="${curItem.img}.jpg" x="0" y="0" width="${wMm}" height="${hMm}" preserveAspectRatio="xMidYMid slice"/>`;
   }
-  if(!curItem)return`<svg viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg">${els}</svg>`;
+  if(!curItem)return`<svg viewBox="0 0 ${wMm} ${hMm}" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">${els}</svg>`;
 
   const oChars=curItem.omote.split('');
   const{fs:oFs,step:oStep,totalH:oTotalH}=calcVert(oChars.length,O_BASE,O_H);
   const oStartY=(O_TOP+O_BOTTOM)/2-oTotalH/2;
   const omoteX=BASE_W/2;
   oChars.forEach((c,i)=>{
-    const ymm=oStartY+oFs*0.85+i*oFs*oStep;
-    els+=`<text x="${omoteX*scaleX}" y="${ymm*scaleY}" text-anchor="middle" font-size="${oFs*scaleY}" font-weight="700" font-family="${FF}" fill="${ink}">${c}</text>`;
+    const y=oStartY+oFs*0.85+i*oFs*oStep;
+    els+=`<text x="${omoteX*scaleX}" y="${y*scaleY}" text-anchor="middle" font-size="${oFs*scaleY}" font-weight="700" font-family="${FF}" fill="${ink}">${c}</text>`;
   });
   if(curItem.soe){
     const soeChars=curItem.soe.split('');
     const{fs:sFs,step:sSp}=calcSoeVert(soeChars.length,SOE_BASE,BASE_H-SOE_TOP-20);
     const soeX=omoteX+oFs/2+SOE_OMOTE_GAP+sFs/2;
     soeChars.forEach((c,i)=>{
-      const ymm=SOE_TOP+sFs*0.85+i*sFs*sSp;
-      els+=`<text x="${soeX*scaleX}" y="${ymm*scaleY}" text-anchor="middle" font-size="${sFs*scaleY}" font-weight="700" font-family="${FF}" fill="${ink}">${c}</text>`;
+      const y=SOE_TOP+sFs*0.85+i*sFs*sSp;
+      els+=`<text x="${soeX*scaleX}" y="${y*scaleY}" text-anchor="middle" font-size="${sFs*scaleY}" font-weight="700" font-family="${FF}" fill="${ink}">${c}</text>`;
     });
   }
   if(names.length>0){
@@ -330,29 +333,61 @@ function makeSVG(w,h){
     names.forEach((name,ci)=>{
       const colXmm=rightmostX-ci*colGap;
       name.split('').forEach((nc,ni)=>{
-        const ymm=nStartY+nFs*0.85+ni*nFs*nStep;
-        els+=`<text x="${colXmm*scaleX}" y="${ymm*scaleY}" text-anchor="middle" font-size="${nFs*scaleY}" font-weight="700" font-family="${FF}" fill="${ink}">${nc}</text>`;
+        const y=nStartY+nFs*0.85+ni*nFs*nStep;
+        els+=`<text x="${colXmm*scaleX}" y="${y*scaleY}" text-anchor="middle" font-size="${nFs*scaleY}" font-weight="700" font-family="${FF}" fill="${ink}">${nc}</text>`;
       });
     });
   }
-  return`<svg viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg">${els}</svg>`;
+  return`<svg viewBox="0 0 ${wMm} ${hMm}" width="${wMm}mm" height="${hMm}mm" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">${els}</svg>`;
 }
 
 function render(){
   const s=SIZES[curSize];
-  document.getElementById('prev').innerHTML=makeSVG(s.w,s.h);
+  const scaleX=s.w/BASE_W,scaleY=s.h/BASE_H;
+  // プレビューはpx換算（1mm≒3.78px）
+  document.getElementById('prev').innerHTML=makeSVGmm(s.w,s.h);
 }
 
 function doPrint(){
   if(!curItem)return;
   const s=SIZES[curSize];
-  const pw=Math.round(s.w/25.4*300),ph=Math.round(s.h/25.4*300);
-  // 印刷サイズをCSS変数に設定
   document.documentElement.style.setProperty('--print-size',s.printSize);
-  // 印刷専用エリアにSVGを入れる（setTimeoutなし・直接呼び出し）
-  document.getElementById('print-page').innerHTML=makeSVG(pw,ph);
-  // window.printをボタンのクリックイベント内で直接呼ぶ（Safariブロック回避）
+  document.getElementById('print-page').innerHTML=makeSVGmm(s.w,s.h);
   window.print();
+}
+
+async function doPDF(){
+  if(!curItem)return;
+  const s=SIZES[curSize];
+  const overlay=document.getElementById('overlay');
+  overlay.classList.add('show');
+
+  try{
+    const {jsPDF}=window.jspdf;
+    const doc=new jsPDF({orientation:'landscape',unit:'mm',format:[s.w,s.h]});
+
+    // SVG要素を一時的にDOMに追加してsvg2pdfに渡す
+    const svgStr=makeSVGmm(s.w,s.h);
+    const parser=new DOMParser();
+    const svgDoc=parser.parseFromString(svgStr,'image/svg+xml');
+    const svgEl=svgDoc.documentElement;
+
+    // 一時コンテナ（画面外）
+    const container=document.createElement('div');
+    container.style.cssText='position:fixed;left:-9999px;top:-9999px;width:'+s.w+'mm;height:'+s.h+'mm;';
+    container.appendChild(svgEl);
+    document.body.appendChild(container);
+
+    await svg2pdf(svgEl,doc,{x:0,y:0,width:s.w,height:s.h});
+    document.body.removeChild(container);
+
+    const filename='noshi_'+curItem.omote+(curItem.soe?'_'+curItem.soe:'')+'_'+s.label+'.pdf';
+    doc.save(filename);
+  }catch(e){
+    alert('PDF生成に失敗しました。\n'+e.message);
+  }finally{
+    overlay.classList.remove('show');
+  }
 }
 
 document.fonts.ready.then(()=>{loadData();});
